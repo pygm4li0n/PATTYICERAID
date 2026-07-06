@@ -154,7 +154,6 @@
             gap: 6px;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             white-space: nowrap;
-            flex-shrink: 0;
         }
         .info-item .emoji-big {
             font-size: 1.4rem;
@@ -170,18 +169,27 @@
             font-size: 1.1em;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 100px;
         }
 
-        /* Center top scorer item - vivid & glowing */
+        .info-item.round-item,
+        .info-item.score-item {
+            flex: 0 0 auto;
+            min-width: 0;
+        }
+        .info-item.round-item .value,
+        .info-item.score-item .value {
+            max-width: 65px;
+        }
+
         .info-item.top-scorer-item {
+            flex: 1 1 auto;
+            min-width: 0;
             background: rgba(255, 215, 0, 0.12);
             border: 1.5px solid rgba(255, 215, 0, 0.5);
             box-shadow: 0 0 22px rgba(255, 215, 0, 0.25), 0 0 50px rgba(255, 180, 0, 0.12);
             animation: topScorerGlow 2.5s ease-in-out infinite;
-            flex-shrink: 1;
-            min-width: 0;
             padding: 6px 18px;
+            justify-content: center;
         }
         @keyframes topScorerGlow {
             0%,
@@ -196,6 +204,7 @@
             filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 22px rgba(255, 180, 0, 0.6));
             font-size: 1.5rem;
             animation: crownBounce 1.8s ease-in-out infinite;
+            flex-shrink: 0;
         }
         @keyframes crownBounce {
             0%,
@@ -215,9 +224,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-size: 1.05em;
-            max-width: 80px;
+            max-width: 150px;
             text-shadow: none;
             filter: drop-shadow(0 0 6px rgba(255, 200, 0, 0.5));
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .grid-frame {
@@ -317,7 +329,6 @@
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
-
         .card-front,
         .card-back {
             position: absolute;
@@ -331,7 +342,6 @@
             justify-content: center;
             overflow: hidden;
         }
-
         .card-back {
             background: rgba(5, 41, 162, 0.15);
             border: 2px solid rgba(0, 229, 255, 0.25);
@@ -352,7 +362,6 @@
             border-color: rgba(0, 229, 255, 0.6);
             box-shadow: inset 0 0 60px rgba(0, 229, 255, 0.15), 0 0 30px rgba(0, 229, 255, 0.3);
         }
-
         .card-front {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
@@ -374,7 +383,6 @@
             border-color: #ffd700;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.2);
         }
-
         .card.red .card-front img {
             filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.9)) drop-shadow(0 0 25px rgba(255, 77, 109, 0.5));
         }
@@ -384,7 +392,6 @@
         .card.gold .card-front img {
             filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 25px rgba(255, 215, 0, 0.5));
         }
-
         .card.glow.red .card-front {
             border-color: #ff4d6d;
             box-shadow: 0 0 50px rgba(255, 77, 109, 0.8), inset 0 0 40px rgba(255, 77, 109, 0.4);
@@ -406,7 +413,6 @@
         .card.glow.gold .card-front img {
             filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1)) drop-shadow(0 0 45px rgba(255, 215, 0, 0.8));
         }
-
         .card-front img {
             max-width: 80%;
             max-height: 80%;
@@ -457,7 +463,6 @@
             }
         }
 
-        /* ── VIVID LEADERBOARD OVERLAY ── */
         #leaderboardOverlay {
             position: fixed;
             inset: 0;
@@ -490,20 +495,7 @@
                 0 30px 80px rgba(0, 0, 0, 0.65),
                 inset 0 1px 0 rgba(255, 255, 255, 0.03);
             position: relative;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0, 200, 255, 0.25) transparent;
         }
-        .lb-panel::-webkit-scrollbar {
-            width: 5px;
-        }
-        .lb-panel::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .lb-panel::-webkit-scrollbar-thumb {
-            background: rgba(0, 200, 255, 0.25);
-            border-radius: 10px;
-        }
-
         .lb-panel h2 {
             text-align: center;
             font-size: 1.7rem;
@@ -526,7 +518,6 @@
                 filter: drop-shadow(0 0 32px rgba(150, 230, 255, 0.8));
             }
         }
-
         .lb-panel .close-btn {
             position: absolute;
             top: 14px;
@@ -537,14 +528,12 @@
             background: none;
             border: none;
             transition: 0.25s;
-            z-index: 5;
         }
         .lb-panel .close-btn:hover {
             color: #ffffff;
             transform: rotate(90deg) scale(1.2);
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
         }
-
         .lb-list {
             list-style: none;
             padding: 0;
@@ -562,174 +551,47 @@
             font-size: 0.9rem;
             border-radius: 14px;
             transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
         }
-        .lb-list li::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 14px;
-            opacity: 0;
-            transition: opacity 0.25s;
-            pointer-events: none;
-        }
-        .lb-list li:hover::before {
-            opacity: 1;
-        }
-        .lb-list li:hover {
-            transform: translateX(4px);
-        }
-
-        /* Rank-based vivid styling */
         .lb-list li.rank-1 {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.18), rgba(255, 180, 0, 0.08));
             border: 1.5px solid rgba(255, 215, 0, 0.45);
-            box-shadow: 0 0 28px rgba(255, 200, 0, 0.22), inset 0 0 30px rgba(255, 200, 0, 0.04);
+            box-shadow: 0 0 28px rgba(255, 200, 0, 0.22);
         }
-        .lb-list li.rank-1::before {
-            background: linear-gradient(135deg, rgba(255, 230, 0, 0.12), transparent);
-        }
-        .lb-list li.rank-1:hover {
-            box-shadow: 0 0 45px rgba(255, 200, 0, 0.4), 0 0 80px rgba(255, 170, 0, 0.15);
-            border-color: rgba(255, 220, 0, 0.7);
-        }
-
         .lb-list li.rank-2 {
             background: linear-gradient(135deg, rgba(192, 210, 230, 0.16), rgba(160, 180, 200, 0.06));
             border: 1.5px solid rgba(180, 200, 220, 0.4);
-            box-shadow: 0 0 22px rgba(180, 200, 220, 0.18), inset 0 0 25px rgba(180, 200, 220, 0.03);
+            box-shadow: 0 0 22px rgba(180, 200, 220, 0.18);
         }
-        .lb-list li.rank-2::before {
-            background: linear-gradient(135deg, rgba(210, 225, 240, 0.1), transparent);
-        }
-        .lb-list li.rank-2:hover {
-            box-shadow: 0 0 38px rgba(190, 210, 230, 0.35);
-            border-color: rgba(200, 220, 240, 0.65);
-        }
-
         .lb-list li.rank-3 {
             background: linear-gradient(135deg, rgba(205, 140, 80, 0.16), rgba(180, 110, 50, 0.06));
             border: 1.5px solid rgba(200, 140, 70, 0.4);
-            box-shadow: 0 0 22px rgba(200, 140, 70, 0.18), inset 0 0 25px rgba(200, 140, 70, 0.03);
+            box-shadow: 0 0 22px rgba(200, 140, 70, 0.18);
         }
-        .lb-list li.rank-3::before {
-            background: linear-gradient(135deg, rgba(220, 160, 90, 0.1), transparent);
-        }
-        .lb-list li.rank-3:hover {
-            box-shadow: 0 0 38px rgba(210, 150, 80, 0.35);
-            border-color: rgba(210, 155, 85, 0.65);
-        }
-
         .lb-list li.rank-other {
             background: rgba(10, 40, 80, 0.2);
             border: 1px solid rgba(80, 180, 240, 0.12);
         }
-        .lb-list li.rank-other::before {
-            background: linear-gradient(135deg, rgba(80, 200, 255, 0.05), transparent);
-        }
-        .lb-list li.rank-other:hover {
-            background: rgba(15, 50, 100, 0.35);
-            border-color: rgba(100, 200, 255, 0.35);
-            box-shadow: 0 0 25px rgba(80, 180, 240, 0.15);
-        }
-
         .lb-list li .medal {
             font-size: 1.6rem;
             min-width: 34px;
             text-align: center;
-            flex-shrink: 0;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
         }
-        .lb-list li.rank-1 .medal {
-            font-size: 1.8rem;
-            filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 180, 0, 0.4));
-            animation: medalGlow1 2s ease-in-out infinite;
-        }
-        @keyframes medalGlow1 {
-            0%,
-            100% {
-                filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.8));
-            }
-            50% {
-                filter: drop-shadow(0 0 28px rgba(255, 230, 50, 1));
-            }
-        }
-        .lb-list li.rank-2 .medal {
-            filter: drop-shadow(0 0 12px rgba(200, 215, 230, 0.7)) drop-shadow(0 0 22px rgba(180, 200, 220, 0.35));
-        }
-        .lb-list li.rank-3 .medal {
-            filter: drop-shadow(0 0 12px rgba(210, 150, 70, 0.7)) drop-shadow(0 0 22px rgba(190, 130, 50, 0.35));
-        }
-
         .lb-list li .name {
             flex: 1;
-            font-family: 'Segoe UI', 'Fredoka One', sans-serif;
             font-weight: 600;
             color: #e8f4ff;
-            letter-spacing: 0.3px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .lb-list li.rank-1 .name {
-            color: #fffbe6;
-            text-shadow: 0 0 12px rgba(255, 210, 0, 0.5);
-        }
-        .lb-list li.rank-2 .name {
-            color: #f0f6fc;
-            text-shadow: 0 0 8px rgba(200, 215, 230, 0.4);
-        }
-        .lb-list li.rank-3 .name {
-            color: #fdf5ec;
-            text-shadow: 0 0 8px rgba(210, 150, 70, 0.4);
-        }
-
         .lb-list li .score {
             font-weight: 700;
             font-family: 'Fredoka One', cursive;
-            font-size: 1.05em;
-            flex-shrink: 0;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #ffffff, #90d8ff);
+            background: linear-gradient(135deg, #fff, #90d8ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 8px rgba(100, 200, 255, 0.5));
         }
-        .lb-list li.rank-1 .score {
-            background: linear-gradient(135deg, #ffd700, #ffec80, #ffb800);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 14px rgba(255, 200, 0, 0.7));
-            font-size: 1.15em;
-        }
-        .lb-list li.rank-2 .score {
-            background: linear-gradient(135deg, #e0e8f0, #c0d8f0, #a0c8e8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(180, 200, 220, 0.5));
-        }
-        .lb-list li.rank-3 .score {
-            background: linear-gradient(135deg, #e8c8a0, #d4a870, #c89050);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(200, 150, 80, 0.5));
-        }
-
-        .lb-empty {
-            color: rgba(150, 210, 255, 0.35);
-            text-align: center;
-            padding: 35px 0;
-            font-style: italic;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-        }
-
-        /* ── VIVID TOP 20 BUTTON ── */
         .btn-records {
             font-family: 'Fredoka One', cursive;
             padding: 8px 24px;
@@ -744,180 +606,31 @@
             backdrop-filter: blur(15px);
             color: rgba(210, 240, 255, 0.7);
             transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25), 0 0 30px rgba(0, 180, 255, 0.1);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
             margin-top: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-records::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
         }
         .btn-records:hover {
-            background: linear-gradient(135deg, rgba(30, 90, 160, 0.45), rgba(15, 55, 100, 0.4));
             color: #ffffff;
             border-color: rgba(150, 230, 255, 0.7);
-            box-shadow: 0 6px 35px rgba(0, 180, 255, 0.25), 0 0 55px rgba(0, 160, 255, 0.2);
-            transform: translateY(-2px);
-        }
-        .btn-records:hover::after {
-            opacity: 1;
-        }
-        .btn-records:active {
-            transform: scale(0.96);
-            transition: transform 0.1s;
+            box-shadow: 0 6px 35px rgba(0, 180, 255, 0.25);
         }
 
         @media (max-width: 600px) {
-            .grid-frame {
-                padding: 10px;
-                border-radius: 24px;
-            }
-            .card-grid {
-                gap: 8px;
-            }
-            .card-front img {
-                max-width: 70%;
-                max-height: 70%;
-            }
-            .card-back::after {
-                font-size: 2.4rem;
-            }
-            .game-logo {
-                max-width: 400px;
-            }
-            .info-item {
-                font-size: 0.65rem;
-                padding: 4px 10px;
-                gap: 4px;
-            }
-            .info-item .emoji-big {
-                font-size: 1.1rem;
-            }
-            .info-item .value {
-                font-size: 0.9em;
-                max-width: 55px;
-            }
-            .info-item.top-scorer-item {
-                padding: 4px 10px;
-            }
             .info-item.top-scorer-item .value {
-                max-width: 50px;
-                font-size: 0.85em;
+                max-width: 100px;
+                font-size: 0.9em;
             }
             .info-item.top-scorer-item .emoji-big {
                 font-size: 1.2rem;
             }
-            .tracker-dot {
-                width: 18px;
-                height: 18px;
-            }
-            .win-message {
-                font-size: 2.2rem;
-            }
-            .round-tracker {
-                gap: 6px;
-            }
-            .info-row {
-                gap: 5px;
-                padding: 0 2px;
-            }
             .lb-panel {
-                padding: 20px 16px 22px;
-                border-radius: 26px;
-                max-width: 95vw;
-            }
-            .lb-panel h2 {
-                font-size: 1.35rem;
-                letter-spacing: 2px;
-            }
-            .lb-list li {
-                padding: 8px 10px;
-                gap: 6px;
-                font-size: 0.78rem;
-                border-radius: 10px;
-            }
-            .lb-list li .medal {
-                font-size: 1.3rem;
-                min-width: 26px;
-            }
-            .lb-list li.rank-1 .medal {
-                font-size: 1.5rem;
-            }
-            .lb-list li .score {
-                font-size: 0.9em;
-            }
-            .btn-records {
-                padding: 6px 16px;
-                font-size: 0.6rem;
-                letter-spacing: 1.5px;
+                padding: 18px 14px;
             }
         }
         @media (max-width: 400px) {
-            .game-logo {
-                max-width: 280px;
-            }
-            .card-front img {
-                max-width: 60%;
-                max-height: 60%;
-            }
-            .card-back::after {
-                font-size: 1.8rem;
-            }
-            .tracker-dot {
-                width: 14px;
-                height: 14px;
-            }
-            .round-tracker {
-                gap: 4px;
-            }
-            .info-item {
-                font-size: 0.55rem;
-                padding: 3px 7px;
-                gap: 3px;
-            }
-            .info-item .emoji-big {
-                font-size: 0.9rem;
-            }
-            .info-item .value {
-                font-size: 0.8em;
-                max-width: 40px;
-            }
             .info-item.top-scorer-item .value {
-                max-width: 36px;
-                font-size: 0.75em;
-            }
-            .info-item.top-scorer-item .emoji-big {
-                font-size: 1rem;
-            }
-            .info-row {
-                gap: 3px;
-                padding: 0 1px;
-            }
-            .lb-panel {
-                padding: 14px 10px 16px;
-                border-radius: 20px;
-            }
-            .lb-list li {
-                padding: 6px 8px;
-                gap: 4px;
-                font-size: 0.7rem;
-            }
-            .lb-list li .medal {
-                font-size: 1.1rem;
-                min-width: 22px;
-            }
-            .lb-list li.rank-1 .medal {
-                font-size: 1.3rem;
+                max-width: 70px;
+                font-size: 0.8em;
             }
         }
     </style>
@@ -940,9 +653,9 @@
         <div class="game-wrapper">
             <img class="game-logo" src="https://i.postimg.cc/2jJMpVh7/Pattu-Horzontal.png" alt="Glacier Realms">
             <div class="info-row">
-                <div class="info-item"><span class="emoji-big">❄️</span><span class="value" id="roundDisplay">1 / 10</span></div>
+                <div class="info-item round-item"><span class="emoji-big">❄️</span><span class="value" id="roundDisplay">1 / 10</span></div>
                 <div class="info-item top-scorer-item"><span class="emoji-big">👑</span><span class="value" id="topScorerDisplay">---</span></div>
-                <div class="info-item"><span class="label" style="opacity:0.7;font-size:0.8em;">⭐</span><span class="value" id="scoreDisplay">0</span></div>
+                <div class="info-item score-item"><span class="label" style="opacity:0.7;font-size:0.8em;">⭐</span><span class="value" id="scoreDisplay">0</span></div>
             </div>
             <div class="grid-frame">
                 <div class="card-grid" id="cardGrid"></div>
@@ -963,31 +676,19 @@
 
     <script>
         (function() {
-            // Snowfall
             const snowCanvas = document.getElementById('snowCanvas');
             const snowCtx = snowCanvas.getContext('2d');
             let snowW, snowH, snowflakes = [];
-            const SNOW_COUNT = 90;
 
             function resizeSnow() { snowW = snowCanvas.width = innerWidth;
                 snowH = snowCanvas.height = innerHeight; }
 
-            function initSnow() {
-                snowflakes = [];
-                for (let i = 0; i < SNOW_COUNT; i++) snowflakes.push({
-                    x: Math.random() * snowW,
-                    y: Math.random() * snowH,
-                    r: Math.random() * 2.5 + 0.8,
-                    speed: Math.random() * 1.2 + 0.4,
-                    wind: (Math.random() - 0.5) * 1.8,
-                    windSpeed: Math.random() * 0.015 + 0.005,
-                    windPhase: Math.random() * Math.PI * 2,
-                    opacity: Math.random() * 0.45 + 0.35,
-                    sway: Math.random() * 1.5 + 0.5,
-                    swaySpeed: Math.random() * 0.015 + 0.005,
-                    swayPhase: Math.random() * Math.PI * 2
-                });
-            }
+            function initSnow() { snowflakes = []; for (let i = 0; i < 90; i++) snowflakes.push({ x: Math.random() *
+                        snowW, y: Math.random() * snowH, r: Math.random() * 2.5 + 0.8, speed: Math.random() * 1.2 +
+                        0.4, wind: (Math.random() - 0.5) * 1.8, windSpeed: Math.random() * 0.015 + 0.005,
+                    windPhase: Math.random() * Math.PI * 2, opacity: Math.random() * 0.45 + 0.35, sway: Math.random() *
+                        1.5 + 0.5, swaySpeed: Math.random() * 0.015 + 0.005, swayPhase: Math.random() * Math.PI * 2
+                }); }
 
             function drawSnow() {
                 snowCtx.clearRect(0, 0, snowW, snowH);
@@ -995,15 +696,9 @@
                     f.y += f.speed;
                     f.windPhase += f.windSpeed;
                     f.swayPhase += f.swaySpeed;
-                    const windOffset = Math.sin(f.windPhase) * f.wind * 20;
-                    const swayX = Math.sin(f.swayPhase) * f.sway;
-                    f.x += windOffset * 0.3 + swayX * 0.1;
-                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) {
-                        f.y = -15;
-                        f.x = Math.random() * snowW;
-                        f.windPhase = Math.random() * Math.PI * 2;
-                        f.swayPhase = Math.random() * Math.PI * 2;
-                    }
+                    f.x += Math.sin(f.windPhase) * f.wind * 6 + Math.sin(f.swayPhase) * f.sway * 0.8;
+                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) { f.y = -15;
+                        f.x = Math.random() * snowW; }
                     snowCtx.globalAlpha = f.opacity;
                     snowCtx.beginPath();
                     snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
@@ -1022,37 +717,26 @@
             initSnow();
             drawSnow();
 
-            // Intro
-            const introScreen = document.getElementById('introScreen');
-            const gameScreen = document.getElementById('gameScreen');
-            const introFill = document.getElementById('introLoadingFill');
-            const introText = document.getElementById('introLoadingText');
+            const introScreen = document.getElementById('introScreen'),
+                gameScreen = document.getElementById('gameScreen');
+            const introFill = document.getElementById('introLoadingFill'),
+                introText = document.getElementById('introLoadingText');
             let progress = 0;
             const interval = setInterval(() => {
                 progress += Math.random() * 2 + 0.8;
-                if (progress >= 100) {
-                    progress = 100;
+                if (progress >= 100) { progress = 100;
                     clearInterval(interval);
-                    setTimeout(() => {
-                        introScreen.classList.remove('active');
+                    setTimeout(() => { introScreen.classList.remove('active');
                         gameScreen.classList.add('active');
-                        initGame();
-                    }, 300);
-                }
+                        initGame(); }, 300); }
                 introFill.style.width = progress + '%';
                 introText.textContent = `Loading ❄️ ${Math.floor(progress)}%`;
             }, 80);
 
-            // Game
-            const IMAGES = {
-                gold: 'https://i.postimg.cc/QVhLwdng/goldenpati.png',
-                green: 'https://i.postimg.cc/9zC3KQN7/bluepati.png',
-                red: 'https://i.postimg.cc/xqnrh1FM/redpati.png'
-            };
+            const IMAGES = { gold: 'https://i.postimg.cc/QVhLwdng/goldenpati.png', green: 'https://i.postimg.cc/9zC3KQN7/bluepati.png', red: 'https://i.postimg.cc/xqnrh1FM/redpati.png' };
             const POINTS = { gold: 1250, green: 750, red: 450 };
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
-
             const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
             const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
             const ALLORIGINS = 'https://api.allorigins.win/get?url=';
@@ -1079,10 +763,8 @@
             function initGrid() {
                 let types = [];
                 for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
-                for (let i = types.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [types[i], types[j]] = [types[j], types[i]];
-                }
+                for (let i = types.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
+                    [types[i], types[j]] = [types[j], types[i]]; }
                 grid = types.map(type => ({ type, revealed: false }));
                 revealedCount = { gold: 0, green: 0, red: 0 };
                 roundActive = true;
@@ -1102,17 +784,14 @@
                     front.className = 'card-front';
                     const img = document.createElement('img');
                     img.src = IMAGES[item.type];
-                    img.alt = item.type;
                     front.appendChild(img);
                     const back = document.createElement('div');
                     back.className = 'card-back';
                     inner.appendChild(front);
                     inner.appendChild(back);
                     card.appendChild(inner);
-                    if (item.revealed) {
-                        card.classList.add('flipped');
-                        card.classList.add(TYPE_COLOR[item.type]);
-                    }
+                    if (item.revealed) { card.classList.add('flipped');
+                        card.classList.add(TYPE_COLOR[item.type]); }
                     card.addEventListener('click', () => handleCardClick(idx));
                     cardGrid.appendChild(card);
                 });
@@ -1133,32 +812,23 @@
                     roundActive = false;
                     let pointsEarned = POINTS[item.type],
                         bonus = 0;
-                    if (item.type === 'gold') {
-                        goldStreak++;
-                        if (goldStreak >= 2) { bonus = (goldStreak - 1) * 250;
-                            pointsEarned += bonus; }
-                    } else { goldStreak = 0; }
+                    if (item.type === 'gold') { goldStreak++; if (goldStreak >= 2) { bonus = (goldStreak - 1) * 250;
+                            pointsEarned += bonus; } } else { goldStreak = 0; }
                     totalScore += pointsEarned;
                     updateHUD();
                     roundResults[round - 1] = item.type;
                     updateTracker();
-                    grid.forEach((g, i) => {
-                        if (g.type === item.type && g.revealed) {
-                            const el = cardGrid.children[i];
+                    grid.forEach((g, i) => { if (g.type === item.type && g.revealed) { const el = cardGrid.children[i];
                             el.classList.add('glow');
-                            el.classList.add(TYPE_COLOR[item.type]);
-                        }
-                    });
+                            el.classList.add(TYPE_COLOR[item.type]); } });
                     let msgText = `+${pointsEarned}`;
                     if (bonus > 0) msgText += ` 🔥+${bonus}`;
                     winMessage.textContent = msgText;
                     winMessage.className = `win-message show ${TYPE_COLOR[item.type]}`;
-                    setTimeout(() => {
-                        winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove(
-                            'glow', 'red', 'blue', 'gold'));
-                        nextRound();
-                    }, 1600);
+                    setTimeout(() => { winMessage.classList.remove('show', 'red', 'blue', 'gold');
+                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove('glow', 'red',
+                            'blue', 'gold'));
+                        nextRound(); }, 1600);
                 } else if (grid.every(g => g.revealed)) {
                     isProcessing = true;
                     roundActive = false;
@@ -1167,23 +837,17 @@
                     updateTracker();
                     winMessage.textContent = '🌨️ No match';
                     winMessage.className = 'win-message show blue';
-                    setTimeout(() => {
-                        winMessage.classList.remove('show', 'blue');
-                        nextRound();
-                    }, 1000);
+                    setTimeout(() => { winMessage.classList.remove('show', 'blue');
+                        nextRound(); }, 1000);
                 }
                 updateHUD();
             }
 
-            function nextRound() {
-                round++;
-                if (round > TOTAL_ROUNDS) { endGame(); return; }
-                initGrid();
+            function nextRound() { round++; if (round > TOTAL_ROUNDS) { endGame(); return; } initGrid();
                 renderGrid();
                 updateHUD();
                 updateTracker();
-                isProcessing = false;
-            }
+                isProcessing = false; }
 
             function endGame() {
                 const finalScore = totalScore;
@@ -1202,10 +866,8 @@
                 }
             }
 
-            function updateHUD() {
-                roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
-                scoreDisplay.textContent = totalScore;
-            }
+            function updateHUD() { roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
+                scoreDisplay.textContent = totalScore; }
 
             function updateTracker() {
                 roundTracker.innerHTML = '';
@@ -1230,60 +892,62 @@
                 updateTracker();
                 goldStreak = 0; }
 
-            function addScoreToDreamlo(name, score) {
-                const url =
-                    `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
-                fetch(ALLORIGINS + encodeURIComponent(url)).then(r => r.json()).then(() => loadLeaderboard()).catch(
-                    console.error);
-            }
-
-            function updateTopScorerDisplay(topName) {
-                if (topName) {
-                    topScorerDisplay.textContent = topName;
-                    topScorerDisplay.style.maxWidth = '80px';
-                } else {
-                    topScorerDisplay.textContent = '---';
-                    topScorerDisplay.style.maxWidth = '50px';
-                }
-            }
-
+            // ⚡ FAST JSONP LOADING (no proxy)
             function loadLeaderboard() {
-                const url = `http://dreamlo.com/lb/${DREAMLO_PUBLIC}/json`;
-                fetch(ALLORIGINS + encodeURIComponent(url)).then(r => r.json()).then(data => {
-                    let entries = [];
+                const callbackName = 'dreamloCb_' + Date.now();
+                window[callbackName] = function(data) {
                     try {
-                        const json = JSON.parse(data.contents);
-                        if (json.dreamlo?.leaderboard?.entry) {
-                            let raw = json.dreamlo.leaderboard.entry;
+                        let entries = [];
+                        if (data?.dreamlo?.leaderboard?.entry) {
+                            let raw = data.dreamlo.leaderboard.entry;
                             entries = (Array.isArray(raw) ? raw : [raw]).sort((a, b) => +b.score - +a.score).slice(
                                 0, 20);
                         }
-                    } catch (e) {}
-                    lbList.innerHTML = '';
-                    if (!entries.length) {
-                        lbList.innerHTML = '<li class="lb-empty">❄️ No scores yet. Be the first legend!</li>';
-                        updateTopScorerDisplay(null);
-                        return;
+                        renderLeaderboard(entries);
+                    } catch (e) {
+                        lbList.innerHTML = '<li class="lb-empty">Could not load scores.</li>';
                     }
-                    // Update top scorer in info row
-                    updateTopScorerDisplay(entries[0].name);
-                    entries.forEach((entry, idx) => {
-                        const li = document.createElement('li');
-                        let rankClass = 'rank-other';
-                        let medalEmoji = '🔹';
-                        if (idx === 0) { rankClass = 'rank-1';
-                            medalEmoji = '🥇'; } else if (idx === 1) { rankClass = 'rank-2';
-                            medalEmoji = '🥈'; } else if (idx === 2) { rankClass = 'rank-3';
-                            medalEmoji = '🥉'; }
-                        li.className = rankClass;
-                        li.innerHTML =
-                            `<span class="medal">${medalEmoji}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${Number(entry.score).toLocaleString()}</span>`;
-                        lbList.appendChild(li);
-                    });
-                }).catch(() => {
-                    lbList.innerHTML = '<li class="lb-empty">🌨️ Could not load scores.</li>';
-                    updateTopScorerDisplay(null);
+                    document.body.removeChild(document.getElementById(callbackName));
+                    delete window[callbackName];
+                };
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = `https://dreamlo.com/lb/${DREAMLO_PUBLIC}/json?callback=${callbackName}`;
+                script.onerror = () => { lbList.innerHTML = '<li class="lb-empty">Network error.</li>'; };
+                document.body.appendChild(script);
+            }
+
+            function renderLeaderboard(entries) {
+                lbList.innerHTML = '';
+                if (!entries.length) { lbList.innerHTML =
+                        '<li class="lb-empty">No scores yet. Be the first legend!</li>';
+                    updateTopScorerDisplay(null); return; }
+                updateTopScorerDisplay(entries[0].name);
+                entries.forEach((entry, idx) => {
+                    const li = document.createElement('li');
+                    let rankClass = 'rank-other',
+                        medal = '🔹';
+                    if (idx === 0) { rankClass = 'rank-1';
+                        medal = '🥇'; } else if (idx === 1) { rankClass = 'rank-2';
+                        medal = '🥈'; } else if (idx === 2) { rankClass = 'rank-3';
+                        medal = '🥉'; }
+                    li.className = rankClass;
+                    li.innerHTML =
+                        `<span class="medal">${medal}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${Number(entry.score).toLocaleString()}</span>`;
+                    lbList.appendChild(li);
                 });
+            }
+
+            function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
+
+            // ✅ RELIABLE WRITE via AllOrigins proxy (exactly as before)
+            function addScoreToDreamlo(name, score) {
+                const url =
+                    `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
+                fetch(ALLORIGINS + encodeURIComponent(url))
+                    .then(r => r.json())
+                    .then(() => loadLeaderboard())
+                    .catch(console.error);
             }
 
             function escapeHtml(str) { const div = document.createElement('div');
@@ -1291,13 +955,12 @@
 
             recordsBtn.addEventListener('click', () => { lbOverlay.classList.add('open');
                 loadLeaderboard(); });
-            document.getElementById('lbCloseBtn').addEventListener('click', () => lbOverlay.classList.remove('open'));
+            document.getElementById('lbCloseBtn').addEventListener('click', () => lbOverlay.classList.remove(
+            'open'));
             lbOverlay.addEventListener('click', (e) => { if (e.target === lbOverlay) lbOverlay.classList.remove(
                     'open'); });
-
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'r' || e.key === 'R') {
-                    round = 1;
+                if (e.key === 'r' || e.key === 'R') { round = 1;
                     totalScore = 0;
                     gameOver = false;
                     goldStreak = 0;
@@ -1307,8 +970,7 @@
                     updateHUD();
                     updateTracker();
                     winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                    winMessage.textContent = '';
-                }
+                    winMessage.textContent = ''; }
                 if (e.key === 'Escape') lbOverlay.classList.remove('open');
             });
 
