@@ -162,7 +162,7 @@
 
 <script>
     (function() {
-        // Snowfall
+        // Snowfall (unchanged)
         const snowCanvas = document.getElementById('snowCanvas');
         const snowCtx = snowCanvas.getContext('2d');
         let snowW, snowH, snowflakes = [];
@@ -203,9 +203,9 @@
         const TYPE_COLOR = { gold:'gold', green:'blue', red:'red' };
         const TOTAL_ROUNDS = 10;
 
-        const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
-        const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
-        const ALLORIGINS = 'https://api.allorigins.win/get?url=';
+        // Dreamlo direct URLs
+        const WRITE_URL = 'http://dreamlo.com/lb/pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg/add/';
+        const READ_URL = 'http://dreamlo.com/lb/6a4c2b7b8f40bc13187164c5/json';
 
         let grid=[], round=1, totalScore=0, roundActive=true, gameOver=false, roundResults=[], revealedCount={}, isProcessing=false, goldStreak=0;
         const cardGrid=document.getElementById('cardGrid'), roundDisplay=document.getElementById('roundDisplay'), scoreDisplay=document.getElementById('scoreDisplay'), roundTracker=document.getElementById('roundTracker'), winMessage=document.getElementById('winMessage'), lbOverlay=document.getElementById('leaderboardOverlay'), lbList=document.getElementById('lbList'), recordsBtn=document.getElementById('recordsBtn');
@@ -268,13 +268,14 @@
         }
 
         function endGame(){
-            gameOver=true; roundActive=false;
-            const name = prompt('🏆 Enter your name for the leaderboard:','Player');
-            if(name&&name.trim()){ addScoreToDreamlo(name.trim(), totalScore); }
-            setTimeout(()=>{
-                round=1; totalScore=0; gameOver=false; goldStreak=0; roundResults=[];
-                initGrid(); renderGrid(); updateHUD(); updateTracker();
-            },500);
+            const finalScore = totalScore;
+            // Reset immediately
+            round = 1; totalScore = 0; gameOver = false; goldStreak = 0; roundResults = [];
+            initGrid(); renderGrid(); updateHUD(); updateTracker();
+            const name = prompt('🏆 Enter your name for the leaderboard:', 'Player');
+            if (name && name.trim()) {
+                addScoreToDreamlo(name.trim(), finalScore);
+            }
         }
 
         function updateHUD(){ roundDisplay.textContent=`${Math.min(round,TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`; scoreDisplay.textContent=totalScore; }
@@ -296,30 +297,35 @@
 
         function initGame(){ initGrid(); renderGrid(); updateHUD(); updateTracker(); goldStreak=0; }
 
-        function addScoreToDreamlo(name,score){
-            const url=`http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
-            fetch(ALLORIGINS+encodeURIComponent(url)).then(r=>r.json()).then(()=>loadLeaderboard()).catch(console.error);
+        function addScoreToDreamlo(name, score) {
+            fetch(`${WRITE_URL}${encodeURIComponent(name)}/${score}`)
+                .then(() => loadLeaderboard())
+                .catch(console.error);
         }
 
-        function loadLeaderboard(){
-            const url=`http://dreamlo.com/lb/${DREAMLO_PUBLIC}/json`;
-            fetch(ALLORIGINS+encodeURIComponent(url)).then(r=>r.json()).then(data=>{
-                let entries=[];
-                try{
-                    const json=JSON.parse(data.contents);
-                    if(json.dreamlo?.leaderboard?.entry){
-                        let raw=json.dreamlo.leaderboard.entry;
-                        entries=(Array.isArray(raw)?raw:[raw]).sort((a,b)=>+b.score-+a.score).slice(0,20);
+        function loadLeaderboard() {
+            fetch(READ_URL)
+                .then(r => r.json())
+                .then(data => {
+                    let entries = [];
+                    if (data.dreamlo?.leaderboard?.entry) {
+                        let raw = data.dreamlo.leaderboard.entry;
+                        entries = (Array.isArray(raw) ? raw : [raw])
+                            .sort((a, b) => parseInt(b.score) - parseInt(a.score))
+                            .slice(0, 20);
                     }
-                }catch(e){}
-                lbList.innerHTML='';
-                if(!entries.length){ lbList.innerHTML='<li class="lb-empty">No scores yet. Be the first!</li>'; return; }
-                entries.forEach((entry,idx)=>{
-                    const li=document.createElement('li');
-                    li.innerHTML=`<span class="medal">${idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'🔹'}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${entry.score}</span>`;
-                    lbList.appendChild(li);
-                });
-            }).catch(()=>{ lbList.innerHTML='<li class="lb-empty">Could not load scores.</li>'; });
+                    lbList.innerHTML = '';
+                    if (!entries.length) {
+                        lbList.innerHTML = '<li class="lb-empty">No scores yet. Be the first!</li>';
+                        return;
+                    }
+                    entries.forEach((entry, idx) => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<span class="medal">${idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'🔹'}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${entry.score}</span>`;
+                        lbList.appendChild(li);
+                    });
+                })
+                .catch(() => { lbList.innerHTML = '<li class="lb-empty">Could not load scores.</li>'; });
         }
 
         function escapeHtml(str){ const div=document.createElement('div'); div.textContent=str; return div.innerHTML; }
