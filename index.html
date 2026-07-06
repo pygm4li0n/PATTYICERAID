@@ -892,7 +892,7 @@
                 updateTracker();
                 goldStreak = 0; }
 
-            // ⚡ FAST JSONP LOADING (no proxy)
+            // ⚡ Fast leaderboard loading via JSONP
             function loadLeaderboard() {
                 const callbackName = 'dreamloCb_' + Date.now();
                 window[callbackName] = function(data) {
@@ -940,7 +940,7 @@
 
             function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
 
-            // ✅ RELIABLE WRITE via AllOrigins proxy (exactly as before)
+            // ✅ Reliable write via AllOrigins proxy (ensures scores are saved correctly)
             function addScoreToDreamlo(name, score) {
                 const url =
                     `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
