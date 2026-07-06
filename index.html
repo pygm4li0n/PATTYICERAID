@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>❄️ GLACIER REALMS · Ice & Transparency</title>
+    <title>❄️ GLACIER REALMS · Ice Cube Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             min-height: 100vh;
@@ -25,11 +21,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── EPIC DEEP BLUE BACKGROUND ── */
         .bg-glacier {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
+            position: fixed; inset: 0; z-index: 0;
             background:
                 radial-gradient(circle at 30% 20%, rgba(5, 41, 162, 0.25) 0%, transparent 35%),
                 radial-gradient(circle at 70% 60%, rgba(5, 41, 162, 0.2) 0%, transparent 40%),
@@ -37,687 +30,311 @@
                 radial-gradient(ellipse at 50% 50%, #0529a2 0%, #02104a 60%, #010520 100%);
             animation: gentleShift 12s ease-in-out infinite alternate;
         }
-
         @keyframes gentleShift {
-            0% {
-                opacity: 0.95;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.04);
-            }
+            0% { opacity: 0.95; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.04); }
         }
 
-        /* ── OPTIMIZED SNOWFALL (falling straight, no drift) ── */
-        #snowCanvas {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
+        #snowCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-        /* ── SCREENS ── */
-        .screen {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 2;
-        }
-        .active {
-            display: flex;
-        }
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2; }
+        .active { display: flex; }
 
-        /* ── INTRO ── */
-        #introScreen {
-            background: transparent;
-        }
-        .intro-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-        }
-        .intro-image {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            filter: drop-shadow(0 0 40px rgba(5, 41, 162, 0.3));
-            margin-bottom: 30px;
-            border-radius: 20px;
-        }
-        .intro-loading-wrap {
-            width: 80%;
-            max-width: 350px;
-        }
-        .intro-loading-track {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(5, 41, 162, 0.3);
-        }
-        .intro-loading-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00e5ff, #80f0ff);
-            border-radius: 20px;
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
-            transition: width 0.1s linear;
-        }
-        .intro-loading-text {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.65rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 8px;
-            text-align: center;
-            font-weight: 600;
-            font-family: 'Segoe UI', sans-serif;
-        }
+        #introScreen { background: transparent; }
+        .intro-container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; padding: 20px; }
+        .intro-image { width: 100%; max-width: 400px; filter: drop-shadow(0 0 40px rgba(5, 41, 162, 0.3)); margin-bottom: 30px; border-radius: 20px; }
+        .intro-loading-wrap { width: 80%; max-width: 350px; }
+        .intro-loading-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; border: 1px solid rgba(5,41,162,0.3); }
+        .intro-loading-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00e5ff, #80f0ff); border-radius: 20px; box-shadow: 0 0 25px rgba(0,229,255,0.6); transition: width 0.1s linear; }
+        .intro-loading-text { color: rgba(255,255,255,0.3); font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 8px; text-align: center; font-weight: 600; font-family: 'Segoe UI', sans-serif; }
 
-        /* ── GAME WRAPPER ── */
-        .game-wrapper {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 560px;
-            padding: 8px 20px 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
+        .game-wrapper { width: 100%; max-width: 560px; padding: 8px 20px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .game-logo { width: 100%; max-width: 520px; filter: drop-shadow(0 0 50px rgba(0, 229, 255, 0.3)); }
 
-        /* ── LOGO (matches grid width) ── */
-        .game-logo {
-            width: 100%;
-            max-width: 520px;
-            height: auto;
-            filter: drop-shadow(0 0 50px rgba(0, 229, 255, 0.3));
-            margin: 0 auto;
-        }
+        .info-row { display: flex; justify-content: space-between; width: 100%; max-width: 520px; padding: 0 4px; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
+        .info-item { background: rgba(5,41,162,0.2); backdrop-filter: blur(12px); padding: 6px 20px; border-radius: 30px; border: 1px solid white; font-family: 'Fredoka One', cursive; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+        .info-item .emoji-big { font-size: 1.4rem; filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.7)); }
+        .info-item .value { font-weight: 700; background: linear-gradient(135deg, #fff, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 1.1em; }
 
-        /* ── INFO ROW (big emojis) ── */
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 520px;
-            padding: 0 4px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.9);
-            letter-spacing: 1px;
-        }
-        .info-item {
-            background: rgba(5, 41, 162, 0.2);
-            backdrop-filter: blur(12px);
-            padding: 6px 20px;
-            border-radius: 30px;
-            border: 1px solid rgba(0, 229, 255, 0.15);
-            font-family: 'Fredoka One', cursive;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .info-item .emoji-big {
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.7));
-        }
-        .info-item .value {
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, #00e5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.1em;
-        }
+        .grid-frame { background: rgba(5,41,162,0.1); backdrop-filter: blur(20px); border-radius: 32px; padding: 16px; border: 1px solid rgba(0,229,255,0.12); box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 80px rgba(0,229,255,0.03); width: 100%; max-width: 520px; position: relative; overflow: hidden; }
+        .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
 
-        /* ── GRID FRAME ── */
-        .grid-frame {
-            background: rgba(5, 41, 162, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            padding: 16px;
-            border: 1px solid rgba(0, 229, 255, 0.12);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(0, 229, 255, 0.03);
-            width: 100%;
-            max-width: 520px;
-            position: relative;
-            overflow: hidden;
-        }
+        .round-tracker { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 520px; margin: 12px auto 0 auto; gap: 10px; padding: 0 6px; }
+        .tracker-dot { width: 22px; height: 22px; border-radius: 50%; background: rgba(0,229,255,0.1); border: 2px solid rgba(0,229,255,0.3); transition: all 0.3s ease; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+        .tracker-dot.active-red { background: #ff4d6d; border-color: white; box-shadow: 0 0 20px #ff4d6d; transform: scale(1.2); }
+        .tracker-dot.active-blue { background: #00bfff; border-color: white; box-shadow: 0 0 20px #00bfff; transform: scale(1.2); }
+        .tracker-dot.active-gold { background: #ffd700; border-color: white; box-shadow: 0 0 20px #ffd700; transform: scale(1.2); }
+        .tracker-dot.neutral { background: rgba(0,229,255,0.5); border-color: rgba(255,255,255,0.6); box-shadow: 0 0 15px rgba(0,229,255,0.7); transform: scale(1.15); }
+        .tracker-dot.current { border-color: rgba(0,229,255,0.9); box-shadow: 0 0 25px rgba(0,229,255,0.7); animation: dotPulse 1.2s infinite; }
+        @keyframes dotPulse { 0%,100%{ transform: scale(1.2); } 50%{ transform: scale(1.35); } }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            position: relative;
-        }
+        .card { aspect-ratio: 1 / 1; perspective: 800px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); will-change: transform; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
 
-        /* ── CARDS ── */
-        .card {
-            aspect-ratio: 1 / 1;
-            perspective: 800px;
-            cursor: pointer;
-            position: relative;
-        }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-style: preserve-3d;
-            border-radius: 20px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-            will-change: transform;
-        }
+        .card-back { background: rgba(5,41,162,0.15); border: 2px solid rgba(0,229,255,0.25); box-shadow: inset 0 0 40px rgba(0,229,255,0.08); backdrop-filter: blur(10px); z-index: 2; transition: border-color 0.3s, box-shadow 0.3s; }
+        .card-back::after { content: '❄'; font-size: 3.2rem; color: rgba(0,229,255,0.95); text-shadow: 0 0 25px rgba(0,229,255,0.9), 0 0 50px rgba(0,229,255,0.5); filter: drop-shadow(0 0 15px rgba(0,229,255,0.8)); transform: scale(1); }
+        .card:hover .card-back { border-color: rgba(0,229,255,0.6); box-shadow: inset 0 0 60px rgba(0,229,255,0.15), 0 0 30px rgba(0,229,255,0.3); }
 
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
+        .card-front { background: rgba(0,0,0,0.75); backdrop-filter: blur(12px); transform: rotateY(180deg); border: 2px solid rgba(0,229,255,0.3); padding: 10px; transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .card.red .card-front { border-color: #ff4d6d; box-shadow: 0 0 20px rgba(255,77,109,0.5), inset 0 0 20px rgba(255,77,109,0.2); }
+        .card.blue .card-front { border-color: #00bfff; box-shadow: 0 0 20px rgba(0,191,255,0.5), inset 0 0 20px rgba(0,191,255,0.2); }
+        .card.gold .card-front { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.2); }
 
-        .card-front,
-        .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+        .card.red .card-front img { filter: drop-shadow(0 0 12px rgba(255,77,109,0.9)) drop-shadow(0 0 25px rgba(255,77,109,0.5)); }
+        .card.blue .card-front img { filter: drop-shadow(0 0 12px rgba(0,191,255,0.9)) drop-shadow(0 0 25px rgba(0,191,255,0.5)); }
+        .card.gold .card-front img { filter: drop-shadow(0 0 12px rgba(255,215,0,0.9)) drop-shadow(0 0 25px rgba(255,215,0,0.5)); }
 
-        /* ── CARD BACK (static teal snowflake, glassy) ── */
-        .card-back {
-            background: rgba(5, 41, 162, 0.15);
-            border: 2px solid rgba(0, 229, 255, 0.25);
-            box-shadow: inset 0 0 40px rgba(0, 229, 255, 0.08);
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 2;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+        .card.glow.red .card-front { border-color: #ff4d6d; box-shadow: 0 0 50px rgba(255,77,109,0.8), inset 0 0 40px rgba(255,77,109,0.4); }
+        .card.glow.red .card-front img { filter: drop-shadow(0 0 20px rgba(255,77,109,1)) drop-shadow(0 0 45px rgba(255,77,109,0.8)); }
+        .card.glow.blue .card-front { border-color: #00bfff; box-shadow: 0 0 50px rgba(0,191,255,0.8), inset 0 0 40px rgba(0,191,255,0.4); }
+        .card.glow.blue .card-front img { filter: drop-shadow(0 0 20px rgba(0,191,255,1)) drop-shadow(0 0 45px rgba(0,191,255,0.8)); }
+        .card.glow.gold .card-front { border-color: #ffd700; box-shadow: 0 0 50px rgba(255,215,0,0.8), inset 0 0 40px rgba(255,215,0,0.4); }
+        .card.glow.gold .card-front img { filter: drop-shadow(0 0 20px rgba(255,215,0,1)) drop-shadow(0 0 45px rgba(255,215,0,0.8)); }
 
-        .card-back::after {
-            content: '❄';
-            font-size: 3.2rem;
-            color: rgba(0, 229, 255, 0.95);
-            text-shadow:
-                0 0 25px rgba(0, 229, 255, 0.9),
-                0 0 50px rgba(0, 229, 255, 0.5);
-            /* static - no animation */
-            filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.8));
-            transform: scale(1);
-            /* ensures straight orientation */
-        }
+        .card-front img { max-width: 80%; max-height: 80%; object-fit: contain; }
 
-        .card:hover .card-back {
-            border-color: rgba(0, 229, 255, 0.6);
-            box-shadow: inset 0 0 60px rgba(0, 229, 255, 0.15), 0 0 30px rgba(0, 229, 255, 0.3);
-        }
+        .win-message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 3rem; font-weight: 700; text-align: center; pointer-events: none; z-index: 30; opacity: 0; letter-spacing: 2px; white-space: nowrap; color: white; font-family: 'Fredoka One', cursive; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 0 60px rgba(0,0,0,0.9); }
+        .win-message.show { animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .win-message.red { color: #ff4d6d; } .win-message.blue { color: #00bfff; } .win-message.gold { color: #ffd700; }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity:0; } 40%{ transform: translate(-50%, -50%) scale(1.1) rotate(2deg); opacity:1; } 100%{ transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity:1; } }
 
-        /* ── CARD FRONT (dark glass) ── */
-        .card-front {
-            background: rgba(5, 41, 162, 0.25);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(0, 229, 255, 0.3);
-            transform: rotateY(180deg);
-            font-size: 2.8rem;
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
-            box-shadow: inset 0 0 30px rgba(0, 229, 255, 0.1);
-        }
+        #leaderboardOverlay { position: fixed; inset: 0; background: rgba(0,4,12,0.6); backdrop-filter: blur(25px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px; }
+        #leaderboardOverlay.open { display: flex; }
+        .lb-panel { background: linear-gradient(160deg, rgba(10,30,60,0.85), rgba(4,12,24,0.95)); border: 1px solid rgba(100,200,255,0.04); border-radius: 32px; padding: 28px 30px 30px; max-width: 420px; width: 100%; max-height: 70vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.6); position: relative; }
+        .lb-panel h2 { text-align: center; font-size: 1.6rem; font-family: 'Fredoka One', cursive; background: linear-gradient(135deg, #fff, #80c0f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; margin-bottom: 16px; }
+        .lb-panel .close-btn { position: absolute; top: 14px; right: 18px; font-size: 1.5rem; cursor: pointer; color: rgba(100,200,255,0.15); background: none; border: none; transition: 0.2s; }
+        .lb-panel .close-btn:hover { color: #80c0ff; transform: rotate(90deg); }
+        .lb-list { list-style: none; padding: 0; margin: 0; }
+        .lb-list li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; color: rgba(200,235,255,0.75); font-size: 0.9rem; border-bottom: 1px solid rgba(100,200,255,0.03); border-radius: 10px; }
+        .lb-list li .medal { font-size: 1.4rem; min-width: 30px; text-align: center; }
+        .lb-list li .name { flex:1; font-family: 'Segoe UI', sans-serif; }
+        .lb-list li .score { font-weight: 700; font-family: 'Fredoka One', cursive; background: linear-gradient(135deg, #fff, #80c0f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .lb-empty { color: rgba(100,200,255,0.1); text-align: center; padding: 30px 0; font-style: italic; }
 
-        /* ── WIN GLOW ── */
-        .card.glow .card-front {
-            border-color: rgba(0, 229, 255, 0.8);
-            box-shadow: 0 0 50px rgba(0, 229, 255, 0.6), inset 0 0 40px rgba(0, 229, 255, 0.25);
-        }
-
-        /* ── WIN MESSAGE (colored by type) ── */
-        .win-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 3rem;
-            font-weight: 700;
-            text-align: center;
-            pointer-events: none;
-            z-index: 30;
-            opacity: 0;
-            letter-spacing: 2px;
-            white-space: nowrap;
-            color: white;
-            font-family: 'Fredoka One', cursive;
-            text-shadow: 0 0 60px rgba(0,0,0,0.9);
-        }
-        .win-message.show {
-            animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .win-message.red { color: #ff4d6d; text-shadow: 0 0 50px #ff4d6d, 0 0 100px rgba(255,77,109,0.8); }
-        .win-message.teal { color: #00e5ff; text-shadow: 0 0 50px #00e5ff, 0 0 100px rgba(0,229,255,0.8); }
-        .win-message.gold { color: #ffd700; text-shadow: 0 0 50px #ffd700, 0 0 100px rgba(255,215,0,0.8); }
-
-        @keyframes popIn {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(-15deg);
-                opacity: 0;
-            }
-            40% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(2deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-                opacity: 1;
-            }
-        }
-
-        /* ── ROUND TRACKER (epic circles closer together) ── */
-        .round-tracker {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 520px;
-            padding: 0 6px;
-            margin: 6px 0 0;
-            gap: 2px;
-        }
-
-        .tracker-dot {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(0, 229, 255, 0.1);
-            border: 2px solid rgba(0, 229, 255, 0.3);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .tracker-dot.active {
-            background: rgba(0, 229, 255, 0.8);
-            border-color: white;
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.9);
-            transform: scale(1.4);
-        }
-        .tracker-dot.neutral {
-            background: rgba(0, 229, 255, 0.5);
-            border-color: rgba(255,255,255,0.6);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
-            transform: scale(1.25);
-        }
-        .tracker-dot.current {
-            border-color: rgba(0, 229, 255, 0.9);
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
-            animation: dotPulse 1.2s infinite;
-        }
-
-        @keyframes dotPulse {
-            0%,
-            100% {
-                transform: scale(1.4);
-            }
-            50% {
-                transform: scale(1.8);
-            }
-        }
-
-        /* ── RESPONSIVE ── */
         @media (max-width: 600px) {
-            .grid-frame {
-                padding: 10px;
-                border-radius: 24px;
-            }
-            .card-grid {
-                gap: 8px;
-            }
-            .card-front {
-                font-size: 2rem;
-            }
-            .card-back::after {
-                font-size: 2.4rem;
-            }
-            .game-logo {
-                max-width: 400px;
-            }
-            .info-item {
-                font-size: 0.7rem;
-                padding: 4px 12px;
-            }
-            .tracker-dot {
-                width: 14px;
-                height: 14px;
-            }
-            .win-message {
-                font-size: 2.2rem;
-            }
+            .grid-frame { padding: 10px; border-radius: 24px; } .card-grid { gap: 8px; } .card-front img { max-width: 70%; max-height: 70%; } .card-back::after { font-size: 2.4rem; } .game-logo { max-width: 400px; } .info-item { font-size: 0.7rem; padding: 4px 12px; } .tracker-dot { width: 18px; height: 18px; } .win-message { font-size: 2.2rem; } .round-tracker { gap: 6px; }
         }
-
         @media (max-width: 400px) {
-            .game-logo {
-                max-width: 280px;
-            }
-            .card-front {
-                font-size: 1.6rem;
-            }
-            .card-back::after {
-                font-size: 1.8rem;
-            }
-            .tracker-dot {
-                width: 10px;
-                height: 10px;
-            }
+            .game-logo { max-width: 280px; } .card-front img { max-width: 60%; max-height: 60%; } .card-back::after { font-size: 1.8rem; } .tracker-dot { width: 14px; height: 14px; } .round-tracker { gap: 4px; }
         }
     </style>
 </head>
 <body>
+<div class="bg-glacier"></div>
+<canvas id="snowCanvas"></canvas>
 
-    <div class="bg-glacier"></div>
-    <canvas id="snowCanvas"></canvas>
-
-    <!-- INTRO SCREEN -->
-    <div id="introScreen" class="screen active">
-        <div class="intro-container">
-            <img class="intro-image" src="https://i.postimg.cc/cHrqvr3Q/Chat-GPT-Image-6-jul-2026-01-02-18-1.png" alt="Glacier Realms">
-            <div class="intro-loading-wrap">
-                <div class="intro-loading-track">
-                    <div class="intro-loading-fill" id="introLoadingFill"></div>
-                </div>
-                <div class="intro-loading-text" id="introLoadingText">Loading ❄️ 0%</div>
-            </div>
+<div id="introScreen" class="screen active">
+    <div class="intro-container">
+        <img class="intro-image" src="https://i.postimg.cc/cHrqvr3Q/Chat-GPT-Image-6-jul-2026-01-02-18-1.png" alt="Glacier Realms">
+        <div class="intro-loading-wrap">
+            <div class="intro-loading-track"><div class="intro-loading-fill" id="introLoadingFill"></div></div>
+            <div class="intro-loading-text" id="introLoadingText">Loading ❄️ 0%</div>
         </div>
     </div>
+</div>
 
-    <!-- GAME SCREEN -->
-    <div id="gameScreen" class="screen">
-        <div class="game-wrapper">
-            <img class="game-logo" src="https://i.postimg.cc/2jJMpVh7/Pattu-Horzontal.png" alt="Glacier Realms">
-
-            <div class="info-row">
-                <div class="info-item">
-                    <span class="emoji-big">❄️</span>
-                    <span class="value" id="roundDisplay">1 / 10</span>
-                </div>
-                <div class="info-item">
-                    <span class="emoji-big">💎</span>
-                    <span class="value" id="scoreDisplay">0</span>
-                </div>
-            </div>
-
-            <div class="grid-frame">
-                <div class="card-grid" id="cardGrid"></div>
-                <div class="win-message" id="winMessage"></div>
-            </div>
-
-            <div class="round-tracker" id="roundTracker"></div>
+<div id="gameScreen" class="screen">
+    <div class="game-wrapper">
+        <img class="game-logo" src="https://i.postimg.cc/2jJMpVh7/Pattu-Horzontal.png" alt="Glacier Realms">
+        <div class="info-row">
+            <div class="info-item"><span class="emoji-big">❄️</span><span class="value" id="roundDisplay">1 / 10</span></div>
+            <div class="info-item"><span class="label" style="opacity:0.7;font-size:0.8em;">SCORE:</span><span class="value" id="scoreDisplay">0</span></div>
         </div>
+        <div class="grid-frame">
+            <div class="card-grid" id="cardGrid"></div>
+            <div class="win-message" id="winMessage"></div>
+        </div>
+        <div class="round-tracker" id="roundTracker"></div>
+        <button class="btn-records" id="recordsBtn" style="font-family:'Fredoka One',cursive;padding:6px 20px;font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;border:1px solid rgba(100,200,255,0.1);border-radius:30px;cursor:pointer;background:rgba(20,60,100,0.15);backdrop-filter:blur(15px);color:rgba(200,235,255,0.45);transition:0.2s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.2);margin-top:8px;" onmouseover="this.style.background='rgba(100,200,255,0.06)';this.style.color='white';" onmouseout="this.style.background='rgba(20,60,100,0.15)';this.style.color='rgba(200,235,255,0.45)';">📊 TOP 20</button>
     </div>
+</div>
 
-    <script>
-        (function() {
-            // ═══════ SNOWFALL (straight fall, no wind) ═══════
-            const snowCanvas = document.getElementById('snowCanvas');
-            const snowCtx = snowCanvas.getContext('2d');
-            let snowW, snowH;
-            const snowflakes = [];
-            const SNOW_COUNT = 70;
+<div id="leaderboardOverlay">
+    <div class="lb-panel">
+        <button class="close-btn" id="lbCloseBtn">✕</button>
+        <h2>🏆 TOP 20</h2>
+        <ul class="lb-list" id="lbList"><li class="lb-empty">Loading scores…</li></ul>
+    </div>
+</div>
 
-            function resizeSnow() {
-                snowW = snowCanvas.width = window.innerWidth;
-                snowH = snowCanvas.height = window.innerHeight;
+<script>
+    (function() {
+        // Snowfall
+        const snowCanvas = document.getElementById('snowCanvas');
+        const snowCtx = snowCanvas.getContext('2d');
+        let snowW, snowH, snowflakes = [];
+        const SNOW_COUNT = 90;
+        function resizeSnow() { snowW = snowCanvas.width = innerWidth; snowH = snowCanvas.height = innerHeight; }
+        function initSnow() { snowflakes = []; for(let i=0;i<SNOW_COUNT;i++) snowflakes.push({x:Math.random()*snowW, y:Math.random()*snowH, r:Math.random()*2.5+0.8, speed:Math.random()*1.2+0.4, wind:(Math.random()-0.5)*1.8, windSpeed:Math.random()*0.015+0.005, windPhase:Math.random()*Math.PI*2, opacity:Math.random()*0.45+0.35, sway:Math.random()*1.5+0.5, swaySpeed:Math.random()*0.015+0.005, swayPhase:Math.random()*Math.PI*2}); }
+        function drawSnow() {
+            snowCtx.clearRect(0,0,snowW,snowH);
+            for(const f of snowflakes) {
+                f.y += f.speed; f.windPhase += f.windSpeed; f.swayPhase += f.swaySpeed;
+                const windOffset = Math.sin(f.windPhase) * f.wind * 20;
+                const swayX = Math.sin(f.swayPhase) * f.sway;
+                f.x += windOffset * 0.3 + swayX * 0.1;
+                if(f.y>snowH+15||f.x<-20||f.x>snowW+20){ f.y=-15; f.x=Math.random()*snowW; f.windPhase=Math.random()*Math.PI*2; f.swayPhase=Math.random()*Math.PI*2; }
+                snowCtx.globalAlpha=f.opacity; snowCtx.beginPath(); snowCtx.arc(f.x,f.y,f.r,0,Math.PI*2);
+                snowCtx.fillStyle='rgba(255,255,255,0.95)'; snowCtx.shadowColor='rgba(255,255,255,0.6)'; snowCtx.shadowBlur=6; snowCtx.fill();
             }
+            snowCtx.globalAlpha=1; snowCtx.shadowBlur=0;
+            requestAnimationFrame(drawSnow);
+        }
+        window.addEventListener('resize',()=>{resizeSnow();initSnow();});
+        resizeSnow(); initSnow(); drawSnow();
 
-            function initSnow() {
-                snowflakes.length = 0;
-                for (let i = 0; i < SNOW_COUNT; i++) {
-                    snowflakes.push({
-                        x: Math.random() * snowW,
-                        y: Math.random() * snowH,
-                        r: Math.random() * 2.5 + 1,
-                        speed: Math.random() * 1.2 + 0.4,
-                        opacity: Math.random() * 0.35 + 0.15,
-                    });
-                }
-            }
+        // Intro
+        const introScreen=document.getElementById('introScreen');
+        const gameScreen=document.getElementById('gameScreen');
+        const introFill=document.getElementById('introLoadingFill');
+        const introText=document.getElementById('introLoadingText');
+        let progress=0;
+        const interval=setInterval(()=>{
+            progress+=Math.random()*2+0.8; if(progress>=100){progress=100;clearInterval(interval);setTimeout(()=>{introScreen.classList.remove('active');gameScreen.classList.add('active');initGame();},300);}
+            introFill.style.width=progress+'%'; introText.textContent=`Loading ❄️ ${Math.floor(progress)}%`;
+        },80);
 
-            function drawSnow() {
-                snowCtx.clearRect(0, 0, snowW, snowH);
-                for (const f of snowflakes) {
-                    f.y += f.speed;
-                    if (f.y > snowH + 10) {
-                        f.y = -10;
-                        f.x = Math.random() * snowW;
-                    }
-                    snowCtx.globalAlpha = f.opacity;
-                    snowCtx.beginPath();
-                    snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-                    snowCtx.fillStyle = 'rgba(220, 245, 255, 0.9)';
-                    snowCtx.fill();
-                }
-                requestAnimationFrame(drawSnow);
-            }
+        // Game
+        const IMAGES = { gold:'https://i.postimg.cc/QVhLwdng/goldenpati.png', green:'https://i.postimg.cc/9zC3KQN7/bluepati.png', red:'https://i.postimg.cc/xqnrh1FM/redpati.png' };
+        const POINTS = { gold:1250, green:750, red:450 };
+        const TYPE_COLOR = { gold:'gold', green:'blue', red:'red' };
+        const TOTAL_ROUNDS = 10;
 
-            window.addEventListener('resize', () => { resizeSnow();
-                initSnow(); });
-            resizeSnow();
-            initSnow();
-            drawSnow();
+        const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
+        const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
+        const ALLORIGINS = 'https://api.allorigins.win/get?url=';
 
-            // ═══════ INTRO LOADING ═══════
-            const introScreen = document.getElementById('introScreen');
-            const gameScreen = document.getElementById('gameScreen');
-            const introFill = document.getElementById('introLoadingFill');
-            const introText = document.getElementById('introLoadingText');
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 2 + 0.8;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        introScreen.classList.remove('active');
-                        gameScreen.classList.add('active');
-                        initGame();
-                    }, 300);
-                }
-                introFill.style.width = progress + '%';
-                introText.textContent = `Loading ❄️ ${Math.floor(progress)}%`;
-            }, 80);
+        let grid=[], round=1, totalScore=0, roundActive=true, gameOver=false, roundResults=[], revealedCount={}, isProcessing=false, goldStreak=0;
+        const cardGrid=document.getElementById('cardGrid'), roundDisplay=document.getElementById('roundDisplay'), scoreDisplay=document.getElementById('scoreDisplay'), roundTracker=document.getElementById('roundTracker'), winMessage=document.getElementById('winMessage'), lbOverlay=document.getElementById('leaderboardOverlay'), lbList=document.getElementById('lbList'), recordsBtn=document.getElementById('recordsBtn');
 
-            // ═══════ GAME LOGIC ═══════
-            const SYMBOLS = { gold: '💎', green: '❄️', red: '🔥' };
-            const WIN_CLASSES = { gold: 'gold', green: 'teal', red: 'red' };
-            const POINTS = { gold: 1250, green: 750, red: 450 };
-            const TOTAL_ROUNDS = 10;
+        function initGrid() {
+            let types = []; for(let i=0;i<4;i++) types.push('gold','green','red');
+            for(let i=types.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [types[i],types[j]]=[types[j],types[i]]; }
+            grid = types.map(type=>({type, revealed:false}));
+            revealedCount = { gold:0, green:0, red:0 };
+            roundActive = true; isProcessing = false;
+        }
 
-            let grid = [];
-            let round = 1;
-            let totalScore = 0;
-            let roundActive = true;
-            let gameOver = false;
-            let roundResults = [];
-            let revealedCount = {};
-            let isProcessing = false;
-
-            const cardGrid = document.getElementById('cardGrid');
-            const roundDisplay = document.getElementById('roundDisplay');
-            const scoreDisplay = document.getElementById('scoreDisplay');
-            const roundTracker = document.getElementById('roundTracker');
-            const winMessage = document.getElementById('winMessage');
-
-            function initGrid() {
-                let types = [];
-                for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
-                for (let i = types.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [types[i], types[j]] = [types[j], types[i]];
-                }
-                grid = types.map(type => ({ type, revealed: false }));
-                revealedCount = { gold: 0, green: 0, red: 0 };
-                roundActive = true;
-                isProcessing = false;
-            }
-
-            function renderGrid() {
-                cardGrid.innerHTML = '';
-                grid.forEach((item, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.dataset.index = index;
-
-                    const inner = document.createElement('div');
-                    inner.className = 'card-inner';
-
-                    const front = document.createElement('div');
-                    front.className = 'card-front';
-                    front.textContent = SYMBOLS[item.type];
-
-                    const back = document.createElement('div');
-                    back.className = 'card-back';
-
-                    inner.appendChild(front);
-                    inner.appendChild(back);
-                    card.appendChild(inner);
-
-                    if (item.revealed) card.classList.add('flipped');
-                    card.addEventListener('click', () => handleCardClick(index));
-                    cardGrid.appendChild(card);
-                });
-            }
-
-            function handleCardClick(index) {
-                if (gameOver || !roundActive || isProcessing) return;
-                const item = grid[index];
-                if (item.revealed) return;
-
-                item.revealed = true;
-                revealedCount[item.type]++;
-                cardGrid.children[index].classList.add('flipped');
-
-                if (revealedCount[item.type] === 3) {
-                    isProcessing = true;
-                    roundActive = false;
-                    totalScore += POINTS[item.type];
-                    updateHUD();
-
-                    grid.forEach((g, i) => {
-                        if (g.type === item.type && g.revealed) {
-                            cardGrid.children[i].classList.add('glow');
-                        }
-                    });
-
-                    winMessage.innerHTML = `${SYMBOLS[item.type]} +${POINTS[item.type]}`;
-                    winMessage.className = `win-message show ${WIN_CLASSES[item.type]}`;
-                    roundResults[round - 1] = item.type;
-
-                    setTimeout(() => {
-                        winMessage.classList.remove('show', 'red', 'teal', 'gold');
-                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove('glow'));
-                        nextRound();
-                    }, 1500);
-                } else if (grid.every(g => g.revealed)) {
-                    isProcessing = true;
-                    roundActive = false;
-                    roundResults[round - 1] = null;
-                    winMessage.textContent = '🌨️ No match';
-                    winMessage.className = 'win-message show teal'; // neutral teal
-                    setTimeout(() => {
-                        winMessage.classList.remove('show', 'teal');
-                        nextRound();
-                    }, 1000);
-                }
-                updateHUD();
-            }
-
-            function nextRound() {
-                round++;
-                if (round > TOTAL_ROUNDS) {
-                    endGame();
-                    return;
-                }
-                initGrid();
-                renderGrid();
-                updateHUD();
-                updateTracker();
-                isProcessing = false;
-            }
-
-            function endGame() {
-                gameOver = true;
-                roundActive = false;
-                winMessage.textContent = '❄️ COMPLETE ❄️';
-                winMessage.className = 'win-message show gold';
-                setTimeout(() => {
-                    round = 1;
-                    totalScore = 0;
-                    gameOver = false;
-                    roundResults = [];
-                    initGrid();
-                    renderGrid();
-                    updateHUD();
-                    updateTracker();
-                    winMessage.classList.remove('show', 'gold');
-                    winMessage.textContent = '';
-                }, 2500);
-            }
-
-            function updateHUD() {
-                roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
-                scoreDisplay.textContent = totalScore;
-            }
-
-            function updateTracker() {
-                roundTracker.innerHTML = '';
-                for (let i = 0; i < TOTAL_ROUNDS; i++) {
-                    const dot = document.createElement('span');
-                    dot.className = 'tracker-dot';
-                    if (i < roundResults.length) {
-                        dot.classList.add(roundResults[i] ? 'active' : 'neutral');
-                    }
-                    if (i === round - 1 && !gameOver) dot.classList.add('current');
-                    roundTracker.appendChild(dot);
-                }
-            }
-
-            function initGame() {
-                initGrid();
-                renderGrid();
-                updateHUD();
-                updateTracker();
-            }
-
-            // Reset with R key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'r' || e.key === 'R') {
-                    round = 1;
-                    totalScore = 0;
-                    gameOver = false;
-                    roundResults = [];
-                    initGrid();
-                    renderGrid();
-                    updateHUD();
-                    updateTracker();
-                    winMessage.classList.remove('show', 'red', 'teal', 'gold');
-                    winMessage.textContent = '';
-                }
+        function renderGrid() {
+            cardGrid.innerHTML = '';
+            grid.forEach((item,idx)=>{
+                const card = document.createElement('div'); card.className='card'; card.dataset.index=idx; card.dataset.type=item.type;
+                const inner = document.createElement('div'); inner.className='card-inner';
+                const front = document.createElement('div'); front.className='card-front';
+                const img = document.createElement('img'); img.src=IMAGES[item.type]; img.alt=item.type; front.appendChild(img);
+                const back = document.createElement('div'); back.className='card-back';
+                inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+                if(item.revealed){ card.classList.add('flipped'); card.classList.add(TYPE_COLOR[item.type]); }
+                card.addEventListener('click',()=>handleCardClick(idx));
+                cardGrid.appendChild(card);
             });
-        })();
-    </script>
+        }
+
+        function handleCardClick(index) {
+            if(gameOver||!roundActive||isProcessing) return;
+            const item = grid[index];
+            if(item.revealed) return;
+            item.revealed = true; revealedCount[item.type]++;
+            const cardEl = cardGrid.children[index];
+            cardEl.classList.add('flipped'); cardEl.classList.add(TYPE_COLOR[item.type]);
+
+            if(revealedCount[item.type]===3){
+                isProcessing=true; roundActive=false;
+                let pointsEarned = POINTS[item.type], bonus=0;
+                if(item.type==='gold'){ goldStreak++; if(goldStreak>=2){ bonus=(goldStreak-1)*250; pointsEarned+=bonus; } }
+                else { goldStreak=0; }
+                totalScore+=pointsEarned; updateHUD();
+                roundResults[round-1]=item.type; updateTracker();
+                grid.forEach((g,i)=>{ if(g.type===item.type&&g.revealed){ const el=cardGrid.children[i]; el.classList.add('glow'); el.classList.add(TYPE_COLOR[item.type]); } });
+                let msgText = `+${pointsEarned}`; if(bonus>0) msgText+=` 🔥+${bonus}`;
+                winMessage.textContent=msgText; winMessage.className=`win-message show ${TYPE_COLOR[item.type]}`;
+                setTimeout(()=>{ winMessage.classList.remove('show','red','blue','gold'); document.querySelectorAll('.card.glow').forEach(el=>el.classList.remove('glow','red','blue','gold')); nextRound(); },1600);
+            } else if(grid.every(g=>g.revealed)){
+                isProcessing=true; roundActive=false; goldStreak=0;
+                roundResults[round-1]=null; updateTracker();
+                winMessage.textContent='🌨️ No match'; winMessage.className='win-message show blue';
+                setTimeout(()=>{ winMessage.classList.remove('show','blue'); nextRound(); },1000);
+            }
+            updateHUD();
+        }
+
+        function nextRound(){
+            round++;
+            if(round>TOTAL_ROUNDS){ endGame(); return; }
+            initGrid(); renderGrid(); updateHUD(); updateTracker(); isProcessing=false;
+        }
+
+        function endGame(){
+            gameOver=true; roundActive=false;
+            const name = prompt('🏆 Enter your name for the leaderboard:','Player');
+            if(name&&name.trim()){ addScoreToDreamlo(name.trim(), totalScore); }
+            setTimeout(()=>{
+                round=1; totalScore=0; gameOver=false; goldStreak=0; roundResults=[];
+                initGrid(); renderGrid(); updateHUD(); updateTracker();
+            },500);
+        }
+
+        function updateHUD(){ roundDisplay.textContent=`${Math.min(round,TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`; scoreDisplay.textContent=totalScore; }
+        function updateTracker(){
+            roundTracker.innerHTML='';
+            for(let i=0;i<TOTAL_ROUNDS;i++){
+                const dot=document.createElement('span'); dot.className='tracker-dot';
+                if(i<roundResults.length){
+                    const res=roundResults[i];
+                    if(res==='gold') dot.classList.add('active-gold');
+                    else if(res==='green') dot.classList.add('active-blue');
+                    else if(res==='red') dot.classList.add('active-red');
+                    else dot.classList.add('neutral');
+                }
+                if(i===round-1&&!gameOver) dot.classList.add('current');
+                roundTracker.appendChild(dot);
+            }
+        }
+
+        function initGame(){ initGrid(); renderGrid(); updateHUD(); updateTracker(); goldStreak=0; }
+
+        function addScoreToDreamlo(name,score){
+            const url=`http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
+            fetch(ALLORIGINS+encodeURIComponent(url)).then(r=>r.json()).then(()=>loadLeaderboard()).catch(console.error);
+        }
+
+        function loadLeaderboard(){
+            const url=`http://dreamlo.com/lb/${DREAMLO_PUBLIC}/json`;
+            fetch(ALLORIGINS+encodeURIComponent(url)).then(r=>r.json()).then(data=>{
+                let entries=[];
+                try{
+                    const json=JSON.parse(data.contents);
+                    if(json.dreamlo?.leaderboard?.entry){
+                        let raw=json.dreamlo.leaderboard.entry;
+                        entries=(Array.isArray(raw)?raw:[raw]).sort((a,b)=>+b.score-+a.score).slice(0,20);
+                    }
+                }catch(e){}
+                lbList.innerHTML='';
+                if(!entries.length){ lbList.innerHTML='<li class="lb-empty">No scores yet. Be the first!</li>'; return; }
+                entries.forEach((entry,idx)=>{
+                    const li=document.createElement('li');
+                    li.innerHTML=`<span class="medal">${idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'🔹'}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${entry.score}</span>`;
+                    lbList.appendChild(li);
+                });
+            }).catch(()=>{ lbList.innerHTML='<li class="lb-empty">Could not load scores.</li>'; });
+        }
+
+        function escapeHtml(str){ const div=document.createElement('div'); div.textContent=str; return div.innerHTML; }
+
+        recordsBtn.addEventListener('click',()=>{ lbOverlay.classList.add('open'); loadLeaderboard(); });
+        document.getElementById('lbCloseBtn').addEventListener('click',()=>lbOverlay.classList.remove('open'));
+        lbOverlay.addEventListener('click',(e)=>{ if(e.target===lbOverlay) lbOverlay.classList.remove('open'); });
+
+        document.addEventListener('keydown',(e)=>{
+            if(e.key==='r'||e.key==='R'){ round=1;totalScore=0;gameOver=false;goldStreak=0;roundResults=[]; initGrid();renderGrid();updateHUD();updateTracker(); winMessage.classList.remove('show','red','blue','gold'); winMessage.textContent=''; }
+            if(e.key==='Escape') lbOverlay.classList.remove('open');
+        });
+
+        loadLeaderboard();
+    })();
+</script>
 </body>
 </html>
