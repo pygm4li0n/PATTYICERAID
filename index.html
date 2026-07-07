@@ -36,14 +36,8 @@
             animation: gentleShift 12s ease-in-out infinite alternate;
         }
         @keyframes gentleShift {
-            0% {
-                opacity: 0.95;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.04);
-            }
+            0% { opacity: 0.95; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.04); }
         }
 
         #snowCanvas {
@@ -63,13 +57,9 @@
             position: relative;
             z-index: 2;
         }
-        .active {
-            display: flex;
-        }
+        .active { display: flex; }
 
-        #introScreen {
-            background: transparent;
-        }
+        #introScreen { background: transparent; }
         .intro-container {
             display: flex;
             flex-direction: column;
@@ -192,13 +182,8 @@
             justify-content: center;
         }
         @keyframes topScorerGlow {
-            0%,
-            100% {
-                box-shadow: 0 0 22px rgba(255, 215, 0, 0.25), 0 0 50px rgba(255, 180, 0, 0.12);
-            }
-            50% {
-                box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), 0 0 70px rgba(255, 180, 0, 0.28);
-            }
+            0%, 100% { box-shadow: 0 0 22px rgba(255, 215, 0, 0.25), 0 0 50px rgba(255, 180, 0, 0.12); }
+            50% { box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), 0 0 70px rgba(255, 180, 0, 0.28); }
         }
         .info-item.top-scorer-item .emoji-big {
             filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 22px rgba(255, 180, 0, 0.6));
@@ -207,16 +192,9 @@
             flex-shrink: 0;
         }
         @keyframes crownBounce {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-5px);
-            }
-            60% {
-                transform: translateY(0);
-            }
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+            60% { transform: translateY(0); }
         }
         .info-item.top-scorer-item .value {
             background: linear-gradient(135deg, #ffd700, #ffb800, #ffe87c);
@@ -301,13 +279,8 @@
             animation: dotPulse 1.2s infinite;
         }
         @keyframes dotPulse {
-            0%,
-            100% {
-                transform: scale(1.2);
-            }
-            50% {
-                transform: scale(1.35);
-            }
+            0%, 100% { transform: scale(1.2); }
+            50% { transform: scale(1.35); }
         }
 
         .card {
@@ -326,9 +299,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
             will-change: transform;
         }
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
         .card-front,
         .card-back {
             position: absolute;
@@ -439,28 +410,13 @@
         .win-message.show {
             animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .win-message.red {
-            color: #ff4d6d;
-        }
-        .win-message.blue {
-            color: #00bfff;
-        }
-        .win-message.gold {
-            color: #ffd700;
-        }
+        .win-message.red { color: #ff4d6d; }
+        .win-message.blue { color: #00bfff; }
+        .win-message.gold { color: #ffd700; }
         @keyframes popIn {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(-15deg);
-                opacity: 0;
-            }
-            40% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(2deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-                opacity: 1;
-            }
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 0; }
+            40% { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
         }
 
         #leaderboardOverlay {
@@ -474,14 +430,9 @@
             justify-content: center;
             padding: 20px;
         }
-        #leaderboardOverlay.open {
-            display: flex;
-        }
+        #leaderboardOverlay.open { display: flex; }
         .lb-panel {
-            background: linear-gradient(170deg,
-                    rgba(8, 25, 55, 0.92),
-                    rgba(2, 10, 30, 0.97),
-                    rgba(6, 20, 48, 0.94));
+            background: linear-gradient(170deg, rgba(8, 25, 55, 0.92), rgba(2, 10, 30, 0.97), rgba(6, 20, 48, 0.94));
             border: 2px solid rgba(0, 200, 255, 0.15);
             border-radius: 34px;
             padding: 28px 28px 30px;
@@ -489,11 +440,7 @@
             width: 100%;
             max-height: 72vh;
             overflow-y: auto;
-            box-shadow:
-                0 0 60px rgba(0, 180, 255, 0.2),
-                0 0 120px rgba(0, 140, 255, 0.08),
-                0 30px 80px rgba(0, 0, 0, 0.65),
-                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 60px rgba(0, 180, 255, 0.2), 0 0 120px rgba(0, 140, 255, 0.08), 0 30px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.03);
             position: relative;
         }
         .lb-panel h2 {
@@ -510,13 +457,8 @@
             animation: titleShimmer 3s ease-in-out infinite;
         }
         @keyframes titleShimmer {
-            0%,
-            100% {
-                filter: drop-shadow(0 0 18px rgba(100, 200, 255, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 32px rgba(150, 230, 255, 0.8));
-            }
+            0%, 100% { filter: drop-shadow(0 0 18px rgba(100, 200, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 32px rgba(150, 230, 255, 0.8)); }
         }
         .lb-panel .close-btn {
             position: absolute;
@@ -601,13 +543,8 @@
             animation: pulseText 1.5s ease-in-out infinite;
         }
         @keyframes pulseText {
-            0%,
-            100% {
-                opacity: 0.5;
-            }
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
         .lb-list .lb-empty {
             text-align: center;
@@ -645,27 +582,15 @@
             border-color: rgba(150, 230, 255, 0.7);
             box-shadow: 0 6px 35px rgba(0, 180, 255, 0.25);
         }
-        .btn-records:active {
-            transform: scale(0.95);
-        }
+        .btn-records:active { transform: scale(0.95); }
 
         @media (max-width: 600px) {
-            .info-item.top-scorer-item .value {
-                max-width: 100px;
-                font-size: 0.9em;
-            }
-            .info-item.top-scorer-item .emoji-big {
-                font-size: 1.2rem;
-            }
-            .lb-panel {
-                padding: 18px 14px;
-            }
+            .info-item.top-scorer-item .value { max-width: 100px; font-size: 0.9em; }
+            .info-item.top-scorer-item .emoji-big { font-size: 1.2rem; }
+            .lb-panel { padding: 18px 14px; }
         }
         @media (max-width: 400px) {
-            .info-item.top-scorer-item .value {
-                max-width: 70px;
-                font-size: 0.8em;
-            }
+            .info-item.top-scorer-item .value { max-width: 70px; font-size: 0.8em; }
         }
     </style>
 </head>
@@ -696,7 +621,7 @@
                 <div class="win-message" id="winMessage"></div>
             </div>
             <div class="round-tracker" id="roundTracker"></div>
-            <button class="btn-records" id="recordsBtn">🏆 TOP 20</button>
+            <button class="btn-records" id="recordsBtn">🏆 TOP 10</button>
         </div>
     </div>
 
@@ -715,41 +640,25 @@
             const snowCtx = snowCanvas.getContext('2d');
             let snowW, snowH, snowflakes = [];
 
-            function resizeSnow() {
-                snowW = snowCanvas.width = innerWidth;
-                snowH = snowCanvas.height = innerHeight;
-            }
-
+            function resizeSnow() { snowW = snowCanvas.width = innerWidth; snowH = snowCanvas.height = innerHeight; }
             function initSnow() {
                 snowflakes = [];
                 for (let i = 0; i < 90; i++) {
                     snowflakes.push({
-                        x: Math.random() * snowW,
-                        y: Math.random() * snowH,
-                        r: Math.random() * 2.5 + 0.8,
-                        speed: Math.random() * 1.2 + 0.4,
-                        wind: (Math.random() - 0.5) * 1.8,
-                        windSpeed: Math.random() * 0.015 + 0.005,
-                        windPhase: Math.random() * Math.PI * 2,
-                        opacity: Math.random() * 0.45 + 0.35,
-                        sway: Math.random() * 1.5 + 0.5,
-                        swaySpeed: Math.random() * 0.015 + 0.005,
-                        swayPhase: Math.random() * Math.PI * 2
+                        x: Math.random() * snowW, y: Math.random() * snowH, r: Math.random() * 2.5 + 0.8,
+                        speed: Math.random() * 1.2 + 0.4, wind: (Math.random() - 0.5) * 1.8,
+                        windSpeed: Math.random() * 0.015 + 0.005, windPhase: Math.random() * Math.PI * 2,
+                        opacity: Math.random() * 0.45 + 0.35, sway: Math.random() * 1.5 + 0.5,
+                        swaySpeed: Math.random() * 0.015 + 0.005, swayPhase: Math.random() * Math.PI * 2
                     });
                 }
             }
-
             function drawSnow() {
                 snowCtx.clearRect(0, 0, snowW, snowH);
                 for (const f of snowflakes) {
-                    f.y += f.speed;
-                    f.windPhase += f.windSpeed;
-                    f.swayPhase += f.swaySpeed;
+                    f.y += f.speed; f.windPhase += f.windSpeed; f.swayPhase += f.swaySpeed;
                     f.x += Math.sin(f.windPhase) * f.wind * 6 + Math.sin(f.swayPhase) * f.sway * 0.8;
-                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) {
-                        f.y = -15;
-                        f.x = Math.random() * snowW;
-                    }
+                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) { f.y = -15; f.x = Math.random() * snowW; }
                     snowCtx.globalAlpha = f.opacity;
                     snowCtx.beginPath();
                     snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
@@ -758,17 +667,11 @@
                     snowCtx.shadowBlur = 6;
                     snowCtx.fill();
                 }
-                snowCtx.globalAlpha = 1;
-                snowCtx.shadowBlur = 0;
+                snowCtx.globalAlpha = 1; snowCtx.shadowBlur = 0;
                 requestAnimationFrame(drawSnow);
             }
-            window.addEventListener('resize', () => {
-                resizeSnow();
-                initSnow();
-            });
-            resizeSnow();
-            initSnow();
-            drawSnow();
+            window.addEventListener('resize', () => { resizeSnow(); initSnow(); });
+            resizeSnow(); initSnow(); drawSnow();
 
             // ─── Intro Loading ──────────────────────────
             const introScreen = document.getElementById('introScreen'),
@@ -779,13 +682,8 @@
             const interval = setInterval(() => {
                 progress += Math.random() * 2 + 0.8;
                 if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        introScreen.classList.remove('active');
-                        gameScreen.classList.add('active');
-                        initGame();
-                    }, 300);
+                    progress = 100; clearInterval(interval);
+                    setTimeout(() => { introScreen.classList.remove('active'); gameScreen.classList.add('active'); initGame(); }, 300);
                 }
                 introFill.style.width = progress + '%';
                 introText.textContent = `Loading ❄️ ${Math.floor(progress)}%`;
@@ -801,23 +699,13 @@
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
 
-            // ─── Dreamlo Keys ───────────────────────────
-            const DREAMLO_KEY_WRITE = "YjalU2-3Yk6RIoRqxNh4JQ3Kq0lO0E_US39f8jV27Y-A";
-            const DREAMLO_KEY_READ = "68a7a4f48f40bb12e0701b8c";
-            const ALLORIGINS = "https://api.allorigins.win/get?url=";
+            // ─── 🌐 Google Sheets Leaderboard URL ────────
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiXhG3WnOMdULaipJOi78DP55NZauCdnB8CiB9LtT5luPIzc5jIHN7XApLNPzyZa_f/exec';
 
             // ─── Game State ─────────────────────────────
-            let grid = [],
-                round = 1,
-                totalScore = 0,
-                roundActive = true,
-                gameOver = false,
-                roundResults = [],
-                revealedCount = {},
-                isProcessing = false,
-                goldStreak = 0;
+            let grid = [], round = 1, totalScore = 0, roundActive = true, gameOver = false,
+                roundResults = [], revealedCount = {}, isProcessing = false, goldStreak = 0;
 
-            // ─── DOM refs ───────────────────────────────
             const cardGrid = document.getElementById('cardGrid'),
                 roundDisplay = document.getElementById('roundDisplay'),
                 scoreDisplay = document.getElementById('scoreDisplay'),
@@ -828,159 +716,80 @@
                 lbList = document.getElementById('lbList'),
                 recordsBtn = document.getElementById('recordsBtn');
 
-            // ─── Grid functions ─────────────────────────
             function initGrid() {
-                let types = [];
-                for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
-                for (let i = types.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [types[i], types[j]] = [types[j], types[i]];
-                }
+                let types = []; for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
+                for (let i = types.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [types[i], types[j]] = [types[j], types[i]]; }
                 grid = types.map(type => ({ type, revealed: false }));
                 revealedCount = { gold: 0, green: 0, red: 0 };
-                roundActive = true;
-                isProcessing = false;
+                roundActive = true; isProcessing = false;
             }
-
             function renderGrid() {
                 cardGrid.innerHTML = '';
                 grid.forEach((item, idx) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.dataset.index = idx;
-                    card.dataset.type = item.type;
-                    const inner = document.createElement('div');
-                    inner.className = 'card-inner';
-                    const front = document.createElement('div');
-                    front.className = 'card-front';
-                    const img = document.createElement('img');
-                    img.src = IMAGES[item.type];
-                    img.alt = item.type;
-                    front.appendChild(img);
-                    const back = document.createElement('div');
-                    back.className = 'card-back';
-                    inner.appendChild(front);
-                    inner.appendChild(back);
-                    card.appendChild(inner);
-                    if (item.revealed) {
-                        card.classList.add('flipped');
-                        card.classList.add(TYPE_COLOR[item.type]);
-                    }
+                    const card = document.createElement('div'); card.className = 'card'; card.dataset.index = idx; card.dataset.type = item.type;
+                    const inner = document.createElement('div'); inner.className = 'card-inner';
+                    const front = document.createElement('div'); front.className = 'card-front';
+                    const img = document.createElement('img'); img.src = IMAGES[item.type]; front.appendChild(img);
+                    const back = document.createElement('div'); back.className = 'card-back';
+                    inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+                    if (item.revealed) { card.classList.add('flipped'); card.classList.add(TYPE_COLOR[item.type]); }
                     card.addEventListener('click', () => handleCardClick(idx));
                     cardGrid.appendChild(card);
                 });
             }
-
             function handleCardClick(index) {
                 if (gameOver || !roundActive || isProcessing) return;
-                const item = grid[index];
-                if (item.revealed) return;
-                item.revealed = true;
-                revealedCount[item.type]++;
+                const item = grid[index]; if (item.revealed) return;
+                item.revealed = true; revealedCount[item.type]++;
                 const cardEl = cardGrid.children[index];
-                cardEl.classList.add('flipped');
-                cardEl.classList.add(TYPE_COLOR[item.type]);
+                cardEl.classList.add('flipped'); cardEl.classList.add(TYPE_COLOR[item.type]);
 
                 if (revealedCount[item.type] === 3) {
-                    isProcessing = true;
-                    roundActive = false;
-                    let pointsEarned = POINTS[item.type],
-                        bonus = 0;
-                    if (item.type === 'gold') {
-                        goldStreak++;
-                        if (goldStreak >= 2) {
-                            bonus = (goldStreak - 1) * 250;
-                            pointsEarned += bonus;
-                        }
-                    } else {
-                        goldStreak = 0;
-                    }
-                    totalScore += pointsEarned;
-                    updateHUD();
-                    roundResults[round - 1] = item.type;
-                    updateTracker();
-                    grid.forEach((g, i) => {
-                        if (g.type === item.type && g.revealed) {
-                            const el = cardGrid.children[i];
-                            el.classList.add('glow');
-                            el.classList.add(TYPE_COLOR[item.type]);
-                        }
-                    });
-                    let msgText = `+${pointsEarned}`;
-                    if (bonus > 0) msgText += ` 🔥+${bonus}`;
-                    winMessage.textContent = msgText;
-                    winMessage.className = `win-message show ${TYPE_COLOR[item.type]}`;
+                    isProcessing = true; roundActive = false;
+                    let pointsEarned = POINTS[item.type], bonus = 0;
+                    if (item.type === 'gold') { goldStreak++; if (goldStreak >= 2) { bonus = (goldStreak - 1) * 250; pointsEarned += bonus; } }
+                    else { goldStreak = 0; }
+                    totalScore += pointsEarned; updateHUD();
+                    roundResults[round - 1] = item.type; updateTracker();
+                    grid.forEach((g, i) => { if (g.type === item.type && g.revealed) { const el = cardGrid.children[i]; el.classList.add('glow'); el.classList.add(TYPE_COLOR[item.type]); } });
+                    let msgText = `+${pointsEarned}`; if (bonus > 0) msgText += ` 🔥+${bonus}`;
+                    winMessage.textContent = msgText; winMessage.className = `win-message show ${TYPE_COLOR[item.type]}`;
                     setTimeout(() => {
                         winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove(
-                            'glow', 'red', 'blue', 'gold'));
+                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove('glow', 'red', 'blue', 'gold'));
                         nextRound();
                     }, 1600);
                 } else if (grid.every(g => g.revealed)) {
-                    isProcessing = true;
-                    roundActive = false;
-                    goldStreak = 0;
-                    roundResults[round - 1] = null;
-                    updateTracker();
-                    winMessage.textContent = '🌨️ No match';
-                    winMessage.className = 'win-message show blue';
-                    setTimeout(() => {
-                        winMessage.classList.remove('show', 'blue');
-                        nextRound();
-                    }, 1000);
+                    isProcessing = true; roundActive = false; goldStreak = 0;
+                    roundResults[round - 1] = null; updateTracker();
+                    winMessage.textContent = '🌨️ No match'; winMessage.className = 'win-message show blue';
+                    setTimeout(() => { winMessage.classList.remove('show', 'blue'); nextRound(); }, 1000);
                 }
                 updateHUD();
             }
-
             function nextRound() {
-                round++;
-                if (round > TOTAL_ROUNDS) {
-                    endGame();
-                    return;
-                }
-                initGrid();
-                renderGrid();
-                updateHUD();
-                updateTracker();
-                isProcessing = false;
+                round++; if (round > TOTAL_ROUNDS) { endGame(); return; }
+                initGrid(); renderGrid(); updateHUD(); updateTracker(); isProcessing = false;
             }
-
             function endGame() {
-                gameOver = true;
-                roundActive = false;
-                const finalScore = totalScore;
-                winMessage.textContent = `🏆 ${finalScore.toLocaleString()} pts!`;
-                winMessage.className = 'win-message show gold';
+                gameOver = true; roundActive = false; const finalScore = totalScore;
+                winMessage.textContent = `🏆 ${finalScore.toLocaleString()} pts!`; winMessage.className = 'win-message show gold';
                 setTimeout(() => {
                     winMessage.classList.remove('show', 'gold');
-                    round = 1;
-                    totalScore = 0;
-                    goldStreak = 0;
-                    roundResults = [];
-                    gameOver = false;
-                    initGrid();
-                    renderGrid();
-                    updateHUD();
-                    updateTracker();
-                    const name = prompt(
-                        `🏆 Final Score: ${finalScore.toLocaleString()} points!\n\nEnter your name for the leaderboard:`,
-                        'Player');
-                    if (name && name.trim()) {
-                        addScoreToDreamlo(name.trim(), finalScore);
-                    }
+                    round = 1; totalScore = 0; goldStreak = 0; roundResults = []; gameOver = false;
+                    initGrid(); renderGrid(); updateHUD(); updateTracker();
+                    const name = prompt(`🏆 Final Score: ${finalScore.toLocaleString()} points!\n\nEnter your name for the leaderboard:`, 'Player');
+                    if (name && name.trim()) { addScoreToSheet(name.trim(), finalScore); }
                 }, 1800);
             }
-
             function updateHUD() {
                 roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
                 scoreDisplay.textContent = totalScore;
             }
-
             function updateTracker() {
                 roundTracker.innerHTML = '';
                 for (let i = 0; i < TOTAL_ROUNDS; i++) {
-                    const dot = document.createElement('span');
-                    dot.className = 'tracker-dot';
+                    const dot = document.createElement('span'); dot.className = 'tracker-dot';
                     if (i < roundResults.length) {
                         const res = roundResults[i];
                         if (res === 'gold') dot.classList.add('active-gold');
@@ -992,69 +801,41 @@
                     roundTracker.appendChild(dot);
                 }
             }
-
             function initGame() {
-                round = 1;
-                totalScore = 0;
-                gameOver = false;
-                goldStreak = 0;
-                roundResults = [];
-                initGrid();
-                renderGrid();
-                updateHUD();
-                updateTracker();
-                updateLeaderboard();
+                round = 1; totalScore = 0; gameOver = false; goldStreak = 0; roundResults = [];
+                initGrid(); renderGrid(); updateHUD(); updateTracker(); fetchLeaderboard();
             }
 
-            // ─── 🌍 GLOBAL-ONLY Dreamlo Functions (No local storage) ───
-            function addScoreToDreamlo(name, score) {
-                // Show temporary message while saving
+            // ─── 📊 Google Sheets Leaderboard Functions ───
+            function addScoreToSheet(name, score) {
                 lbList.innerHTML = '<li class="lb-loading">❄️ Saving your score...</li>';
                 lbOverlay.classList.add('open');
-
-                // Write to Dreamlo via AllOrigins proxy
-                const writeUrl = `http://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}`;
-                fetch(ALLORIGINS + encodeURIComponent(writeUrl))
-                    .then(resp => resp.json())
-                    .then(() => {
-                        // After successful write, fetch the global top 20
-                        setTimeout(() => {
-                            updateLeaderboard();
-                        }, 800);
+                const url = `${SCRIPT_URL}?action=write&name=${encodeURIComponent(name)}&score=${score}`;
+                fetch(url)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            setTimeout(() => fetchLeaderboard(), 800);
+                        } else {
+                            lbList.innerHTML = '<li class="lb-error">❄️ Could not save score.</li>';
+                        }
                     })
                     .catch(() => {
-                        // Still try to refresh after a delay
-                        setTimeout(() => {
-                            updateLeaderboard();
-                        }, 1500);
+                        lbList.innerHTML = '<li class="lb-error">❄️ Could not connect to leaderboard.</li>';
                     });
             }
 
-            function updateLeaderboard() {
-                lbList.innerHTML = '<li class="lb-loading">❄️ Loading global scores...</li>';
-
-                // Read from Dreamlo with cache-busting timestamp
-                const readUrl = `http://dreamlo.com/lb/${DREAMLO_KEY_READ}/json?t=${Date.now()}`;
-                fetch(ALLORIGINS + encodeURIComponent(readUrl))
-                    .then(resp => resp.json())
-                    .then(data => {
-                        let entries = [];
-                        try {
-                            const json = JSON.parse(data.contents);
-                            if (json.dreamlo?.leaderboard?.entry) {
-                                let raw = json.dreamlo.leaderboard.entry;
-                                entries = Array.isArray(raw) ? raw : [raw];
-                                entries = entries.map(e => ({ name: e.name, score: parseInt(e.score) }));
-                                entries.sort((a, b) => b.score - a.score);
-                                entries = entries.slice(0, 20);
-                            }
-                        } catch (e) {
-                            console.error("Dreamlo parse error:", e);
-                        }
+            function fetchLeaderboard() {
+                lbList.innerHTML = '<li class="lb-loading">❄️ Loading global top 10...</li>';
+                const url = `${SCRIPT_URL}?action=read&t=${Date.now()}`;
+                fetch(url)
+                    .then(r => r.json())
+                    .then(entries => {
+                        if (!Array.isArray(entries)) throw new Error('Invalid data');
                         renderLeaderboard(entries);
                     })
                     .catch(() => {
-                        lbList.innerHTML = '<li class="lb-error">❄️ Could not load global scores.<br>Check your connection.</li>';
+                        lbList.innerHTML = '<li class="lb-error">❄️ Could not load scores.</li>';
                         updateTopScorerDisplay(null);
                     });
             }
@@ -1062,22 +843,19 @@
             function renderLeaderboard(entries) {
                 lbList.innerHTML = '';
                 if (!entries.length) {
-                    lbList.innerHTML = '<li class="lb-empty">No global scores yet. Be the first legend! ❄️</li>';
+                    lbList.innerHTML = '<li class="lb-empty">No scores yet. Be the first legend! ❄️</li>';
                     updateTopScorerDisplay(null);
                     return;
                 }
                 updateTopScorerDisplay(entries[0].name);
                 entries.forEach((entry, idx) => {
                     const li = document.createElement('li');
-                    let rankClass = 'rank-other',
-                        medal = '🔹';
-                    if (idx === 0) { rankClass = 'rank-1';
-                        medal = '🥇'; } else if (idx === 1) { rankClass = 'rank-2';
-                        medal = '🥈'; } else if (idx === 2) { rankClass = 'rank-3';
-                        medal = '🥉'; }
+                    let rankClass = 'rank-other', medal = '🔹';
+                    if (idx === 0) { rankClass = 'rank-1'; medal = '🥇'; }
+                    else if (idx === 1) { rankClass = 'rank-2'; medal = '🥈'; }
+                    else if (idx === 2) { rankClass = 'rank-3'; medal = '🥉'; }
                     li.className = rankClass;
-                    li.innerHTML =
-                        `<span class="medal">${medal}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${Number(entry.score).toLocaleString()}</span>`;
+                    li.innerHTML = `<span class="medal">${medal}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${Number(entry.score).toLocaleString()}</span>`;
                     lbList.appendChild(li);
                 });
             }
@@ -1085,48 +863,27 @@
             function updateTopScorerDisplay(name) {
                 topScorerDisplay.textContent = name || '---';
             }
-
             function escapeHtml(str) {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
+                const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
             }
 
-            // ─── Leaderboard Overlay Events ─────────────
-            recordsBtn.addEventListener('click', () => {
-                lbOverlay.classList.add('open');
-                updateLeaderboard();
-            });
-            document.getElementById('lbCloseBtn').addEventListener('click', () => {
-                lbOverlay.classList.remove('open');
-            });
-            lbOverlay.addEventListener('click', (e) => {
-                if (e.target === lbOverlay) lbOverlay.classList.remove('open');
-            });
+            // ─── Overlay Events ─────────────────────────
+            recordsBtn.addEventListener('click', () => { lbOverlay.classList.add('open'); fetchLeaderboard(); });
+            document.getElementById('lbCloseBtn').addEventListener('click', () => lbOverlay.classList.remove('open'));
+            lbOverlay.addEventListener('click', (e) => { if (e.target === lbOverlay) lbOverlay.classList.remove('open'); });
 
-            // ─── Keyboard shortcuts ─────────────────────
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'r' || e.key === 'R') {
-                    round = 1;
-                    totalScore = 0;
-                    gameOver = false;
-                    goldStreak = 0;
-                    roundResults = [];
-                    initGrid();
-                    renderGrid();
-                    updateHUD();
-                    updateTracker();
-                    winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                    winMessage.textContent = '';
+                    round = 1; totalScore = 0; gameOver = false; goldStreak = 0; roundResults = [];
+                    initGrid(); renderGrid(); updateHUD(); updateTracker();
+                    winMessage.classList.remove('show', 'red', 'blue', 'gold'); winMessage.textContent = '';
                 }
-                if (e.key === 'Escape') {
-                    lbOverlay.classList.remove('open');
-                }
+                if (e.key === 'Escape') lbOverlay.classList.remove('open');
             });
 
-            // Auto-refresh leaderboard every 15 seconds
-            setInterval(updateLeaderboard, 15000);
-            updateLeaderboard();
+            // Auto-refresh leaderboard every 30 seconds
+            setInterval(fetchLeaderboard, 30000);
+            fetchLeaderboard();
         })();
     </script>
 </body>
