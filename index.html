@@ -739,6 +739,7 @@
             const TOTAL_ROUNDS = 10;
             const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
             const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
+            // AllOrigins proxy for writing scores (bypasses CORS/mixed content)
             const ALLORIGINS = 'https://api.allorigins.win/get?url=';
 
             let grid = [],
@@ -892,7 +893,7 @@
                 updateTracker();
                 goldStreak = 0; }
 
-            // ⚡ Fast leaderboard loading via JSONP
+            // ✅ Fast leaderboard loading via JSONP (no proxy, works on HTTPS)
             function loadLeaderboard() {
                 const callbackName = 'dreamloCb_' + Date.now();
                 window[callbackName] = function(data) {
@@ -940,13 +941,16 @@
 
             function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
 
-            // ✅ Reliable write via AllOrigins proxy (ensures scores are saved correctly)
+            // ✅ Reliable score writing via AllOrigins proxy (works even on HTTPS pages)
             function addScoreToDreamlo(name, score) {
                 const url =
                     `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
                 fetch(ALLORIGINS + encodeURIComponent(url))
                     .then(r => r.json())
-                    .then(() => loadLeaderboard())
+                    .then(() => {
+                        // Refresh leaderboard after a short delay to let dreamlo process
+                        setTimeout(() => loadLeaderboard(), 800);
+                    })
                     .catch(console.error);
             }
 
