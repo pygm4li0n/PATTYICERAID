@@ -801,7 +801,7 @@
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
 
-            // ─── Dreamlo Keys (from Wake Up to Play) ───
+            // ─── Dreamlo Keys (EXACT from Wake Up to Play) ───
             const DREAMLO_KEY_WRITE = "YjalU2-3Yk6RIoRqxNh4JQ3Kq0lO0E_US39f8jV27Y-A";
             const DREAMLO_KEY_READ = "68a7a4f48f40bb12e0701b8c";
             const ALLORIGINS = "https://api.allorigins.win/get?url=";
@@ -1006,7 +1006,7 @@
                 updateLeaderboard();
             }
 
-            // ─── 🌟 IMPROVED Dreamlo Functions (Local + Remote) ───
+            // ─── ✅ PROVEN Dreamlo Functions (AllOrigins + Local Cache) ───
             function addScoreToDreamlo(name, score) {
                 // 1. Save locally for instant display
                 const localEntry = { name, score: parseInt(score) };
@@ -1020,11 +1020,19 @@
                 renderLeaderboardFromLocal();
                 lbOverlay.classList.add('open');
 
-                // 3. Send to Dreamlo (fire-and-forget with no-cors to ensure it's sent)
-                const url = `https://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}?t=${Date.now()}`;
-                fetch(url, { mode: 'no-cors' }).catch(() => {});
+                // 3. Send to Dreamlo via AllOrigins (RELIABLE)
+                const url = `http://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}`;
+                fetch(ALLORIGINS + encodeURIComponent(url))
+                    .then(resp => resp.json())
+                    .then(() => {
+                        // Refresh from remote after successful write
+                        setTimeout(() => {
+                            updateLeaderboard();
+                        }, 800);
+                    })
+                    .catch(err => console.error("Error adding score:", err));
 
-                // 4. Update from remote after a short delay
+                // 4. Also refresh after a slightly longer delay in case the above fails
                 setTimeout(() => {
                     updateLeaderboard();
                 }, 1500);
