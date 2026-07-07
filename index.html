@@ -801,9 +801,10 @@
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
 
-            // ─── Dreamlo Keys ───────────────────────────
-            const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
-            const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
+            // ─── Dreamlo Keys (EXACT from Wake Up to Play) ───
+            const DREAMLO_KEY_WRITE = "YjalU2-3Yk6RIoRqxNh4JQ3Kq0lO0E_US39f8jV27Y-A";
+            const DREAMLO_KEY_READ = "68a7a4f48f40bb12e0701b8c";
+            const ALLORIGINS = "https://api.allorigins.win/get?url=";
 
             // ─── Game State ─────────────────────────────
             let grid = [],
@@ -831,7 +832,6 @@
             function initGrid() {
                 let types = [];
                 for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
-                // Fisher-Yates shuffle
                 for (let i = types.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [types[i], types[j]] = [types[j], types[i]];
@@ -882,7 +882,6 @@
                 cardEl.classList.add(TYPE_COLOR[item.type]);
 
                 if (revealedCount[item.type] === 3) {
-                    // Three matching cards found
                     isProcessing = true;
                     roundActive = false;
                     let pointsEarned = POINTS[item.type],
@@ -900,7 +899,6 @@
                     updateHUD();
                     roundResults[round - 1] = item.type;
                     updateTracker();
-                    // Glow effect on matching cards
                     grid.forEach((g, i) => {
                         if (g.type === item.type && g.revealed) {
                             const el = cardGrid.children[i];
@@ -919,7 +917,6 @@
                         nextRound();
                     }, 1600);
                 } else if (grid.every(g => g.revealed)) {
-                    // All cards revealed but no triple match
                     isProcessing = true;
                     roundActive = false;
                     goldStreak = 0;
@@ -952,12 +949,10 @@
                 gameOver = true;
                 roundActive = false;
                 const finalScore = totalScore;
-                // Show final score animation
                 winMessage.textContent = `🏆 ${finalScore.toLocaleString()} pts!`;
                 winMessage.className = 'win-message show gold';
                 setTimeout(() => {
                     winMessage.classList.remove('show', 'gold');
-                    // Reset game state
                     round = 1;
                     totalScore = 0;
                     goldStreak = 0;
@@ -967,7 +962,6 @@
                     renderGrid();
                     updateHUD();
                     updateTracker();
-                    // Ask for name and save score
                     const name = prompt(
                         `🏆 Final Score: ${finalScore.toLocaleString()} points!\n\nEnter your name for the leaderboard:`,
                         'Player');
@@ -1009,39 +1003,47 @@
                 renderGrid();
                 updateHUD();
                 updateTracker();
-                // Load leaderboard on game start
-                loadLeaderboard();
+                updateLeaderboard();
             }
 
-            // ─── Dreamlo Leaderboard Functions ──────────
-            // ✅ READ scores: Direct HTTPS call to Dreamlo JSON endpoint (supports CORS)
-            function loadLeaderboard() {
-                lbList.innerHTML = '<li class="lb-loading">❄️ Loading scores...</li>';
-                const url = `https://dreamlo.com/lb/${DREAMLO_PUBLIC}/json?t=${Date.now()}`;
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) throw new Error('HTTP ' + response.status);
-                        return response.json();
+            // ─── ✅ EXACT Dreamlo Functions from Wake Up to Play ───
+            function addScoreToDreamlo(name, score) {
+                const url = `http://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}`;
+                fetch(ALLORIGINS + encodeURIComponent(url))
+                    .then(resp => resp.json())
+                    .then(() => {
+                        setTimeout(() => {
+                            updateLeaderboard();
+                            lbOverlay.classList.add('open');
+                        }, 600);
                     })
+                    .catch(err => console.error("Error adding score:", err));
+            }
+
+            function updateLeaderboard() {
+                const url = `http://dreamlo.com/lb/${DREAMLO_KEY_READ}/json`;
+                fetch(ALLORIGINS + encodeURIComponent(url))
+                    .then(resp => resp.json())
                     .then(data => {
                         let entries = [];
                         try {
-                            if (data.dreamlo && data.dreamlo.leaderboard && data.dreamlo.leaderboard.entry) {
-                                let raw = data.dreamlo.leaderboard.entry;
+                            const json = JSON.parse(data.contents);
+                            if (json.dreamlo && json.dreamlo.leaderboard && json.dreamlo.leaderboard
+                                .entry) {
+                                let raw = json.dreamlo.leaderboard.entry;
                                 entries = Array.isArray(raw) ? raw : [raw];
-                                // Sort by score descending and take top 20
                                 entries.sort((a, b) => parseInt(b.score) - parseInt(a.score));
                                 entries = entries.slice(0, 20);
                             }
                         } catch (e) {
-                            console.error('Leaderboard parse error:', e);
+                            console.error("Error parsing Dreamlo JSON:", e);
                         }
                         renderLeaderboard(entries);
                     })
                     .catch(err => {
-                        console.error('Leaderboard load error:', err);
+                        console.error("Error reading leaderboard:", err);
                         lbList.innerHTML =
-                            '<li class="lb-error">❄️ Could not load scores.<br>Check your connection.</li>';
+                            '<li class="lb-error">❄️ Could not load scores.<br>Check connection.</li>';
                         updateTopScorerDisplay(null);
                     });
             }
@@ -1053,7 +1055,6 @@
                     updateTopScorerDisplay(null);
                     return;
                 }
-                // Update top scorer display with #1 player
                 updateTopScorerDisplay(entries[0].name);
                 entries.forEach((entry, idx) => {
                     const li = document.createElement('li');
@@ -1074,31 +1075,6 @@
                 topScorerDisplay.textContent = name || '---';
             }
 
-            // ✅ WRITE scores: Uses no-cors mode so the request is sent even without CORS headers
-            // Dreamlo processes the GET request and stores the score; we don't need to read the response
-            function addScoreToDreamlo(name, score) {
-                const url =
-                    `https://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}?t=${Date.now()}`;
-                // Use no-cors to ensure the request is fired; Dreamlo will process it server-side
-                fetch(url, { mode: 'no-cors' })
-                    .then(() => {
-                        // Wait a moment for Dreamlo to process, then refresh leaderboard
-                        setTimeout(() => {
-                            loadLeaderboard();
-                            // Auto-open leaderboard so player can see their rank
-                            lbOverlay.classList.add('open');
-                        }, 900);
-                    })
-                    .catch(() => {
-                        // Even if fetch "fails" (no-cors returns opaque response), the GET request
-                        // was still sent to Dreamlo, so the score should be saved.
-                        setTimeout(() => {
-                            loadLeaderboard();
-                            lbOverlay.classList.add('open');
-                        }, 900);
-                    });
-            }
-
             function escapeHtml(str) {
                 const div = document.createElement('div');
                 div.textContent = str;
@@ -1108,7 +1084,7 @@
             // ─── Leaderboard Overlay Events ─────────────
             recordsBtn.addEventListener('click', () => {
                 lbOverlay.classList.add('open');
-                loadLeaderboard();
+                updateLeaderboard();
             });
             document.getElementById('lbCloseBtn').addEventListener('click', () => {
                 lbOverlay.classList.remove('open');
@@ -1119,7 +1095,6 @@
 
             // ─── Keyboard shortcuts ─────────────────────
             document.addEventListener('keydown', (e) => {
-                // 'R' key resets the current game
                 if (e.key === 'r' || e.key === 'R') {
                     round = 1;
                     totalScore = 0;
@@ -1133,14 +1108,14 @@
                     winMessage.classList.remove('show', 'red', 'blue', 'gold');
                     winMessage.textContent = '';
                 }
-                // 'Esc' closes leaderboard
                 if (e.key === 'Escape') {
                     lbOverlay.classList.remove('open');
                 }
             });
 
-            // ─── Initial leaderboard load ───────────────
-            loadLeaderboard();
+            // ─── Auto-refresh leaderboard every 15 seconds (same as Wake Up to Play) ───
+            setInterval(updateLeaderboard, 15000);
+            updateLeaderboard();
         })();
     </script>
 </body>
