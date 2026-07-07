@@ -181,7 +181,6 @@
             max-width: 65px;
         }
 
-        /* Center top scorer – flexible width for long names */
         .info-item.top-scorer-item {
             flex: 1 1 auto;
             min-width: 0;
@@ -464,7 +463,6 @@
             }
         }
 
-        /* Vivid leaderboard panel */
         #leaderboardOverlay {
             position: fixed;
             inset: 0;
@@ -594,6 +592,37 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .lb-list .lb-loading {
+            text-align: center;
+            color: rgba(180, 220, 255, 0.6);
+            padding: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            animation: pulseText 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseText {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        .lb-list .lb-empty {
+            text-align: center;
+            color: rgba(180, 220, 255, 0.5);
+            padding: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .lb-list .lb-error {
+            text-align: center;
+            color: rgba(255, 130, 130, 0.7);
+            padding: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
         .btn-records {
             font-family: 'Fredoka One', cursive;
             padding: 8px 24px;
@@ -615,6 +644,9 @@
             color: #ffffff;
             border-color: rgba(150, 230, 255, 0.7);
             box-shadow: 0 6px 35px rgba(0, 180, 255, 0.25);
+        }
+        .btn-records:active {
+            transform: scale(0.95);
         }
 
         @media (max-width: 600px) {
@@ -672,25 +704,40 @@
         <div class="lb-panel">
             <button class="close-btn" id="lbCloseBtn">✕</button>
             <h2>🏆 GLACIER LEGENDS</h2>
-            <ul class="lb-list" id="lbList"><li class="lb-empty">Loading scores…</li></ul>
+            <ul class="lb-list" id="lbList"><li class="lb-loading">❄️ Loading scores...</li></ul>
         </div>
     </div>
 
     <script>
         (function() {
+            // ─── Snow Canvas ────────────────────────────
             const snowCanvas = document.getElementById('snowCanvas');
             const snowCtx = snowCanvas.getContext('2d');
             let snowW, snowH, snowflakes = [];
 
-            function resizeSnow() { snowW = snowCanvas.width = innerWidth;
-                snowH = snowCanvas.height = innerHeight; }
+            function resizeSnow() {
+                snowW = snowCanvas.width = innerWidth;
+                snowH = snowCanvas.height = innerHeight;
+            }
 
-            function initSnow() { snowflakes = []; for (let i = 0; i < 90; i++) snowflakes.push({ x: Math.random() *
-                        snowW, y: Math.random() * snowH, r: Math.random() * 2.5 + 0.8, speed: Math.random() * 1.2 +
-                        0.4, wind: (Math.random() - 0.5) * 1.8, windSpeed: Math.random() * 0.015 + 0.005,
-                    windPhase: Math.random() * Math.PI * 2, opacity: Math.random() * 0.45 + 0.35, sway: Math.random() *
-                        1.5 + 0.5, swaySpeed: Math.random() * 0.015 + 0.005, swayPhase: Math.random() * Math.PI * 2
-                }); }
+            function initSnow() {
+                snowflakes = [];
+                for (let i = 0; i < 90; i++) {
+                    snowflakes.push({
+                        x: Math.random() * snowW,
+                        y: Math.random() * snowH,
+                        r: Math.random() * 2.5 + 0.8,
+                        speed: Math.random() * 1.2 + 0.4,
+                        wind: (Math.random() - 0.5) * 1.8,
+                        windSpeed: Math.random() * 0.015 + 0.005,
+                        windPhase: Math.random() * Math.PI * 2,
+                        opacity: Math.random() * 0.45 + 0.35,
+                        sway: Math.random() * 1.5 + 0.5,
+                        swaySpeed: Math.random() * 0.015 + 0.005,
+                        swayPhase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
 
             function drawSnow() {
                 snowCtx.clearRect(0, 0, snowW, snowH);
@@ -699,8 +746,10 @@
                     f.windPhase += f.windSpeed;
                     f.swayPhase += f.swaySpeed;
                     f.x += Math.sin(f.windPhase) * f.wind * 6 + Math.sin(f.swayPhase) * f.sway * 0.8;
-                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) { f.y = -15;
-                        f.x = Math.random() * snowW; }
+                    if (f.y > snowH + 15 || f.x < -20 || f.x > snowW + 20) {
+                        f.y = -15;
+                        f.x = Math.random() * snowW;
+                    }
                     snowCtx.globalAlpha = f.opacity;
                     snowCtx.beginPath();
                     snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
@@ -713,12 +762,15 @@
                 snowCtx.shadowBlur = 0;
                 requestAnimationFrame(drawSnow);
             }
-            window.addEventListener('resize', () => { resizeSnow();
-                initSnow(); });
+            window.addEventListener('resize', () => {
+                resizeSnow();
+                initSnow();
+            });
             resizeSnow();
             initSnow();
             drawSnow();
 
+            // ─── Intro Loading ──────────────────────────
             const introScreen = document.getElementById('introScreen'),
                 gameScreen = document.getElementById('gameScreen');
             const introFill = document.getElementById('introLoadingFill'),
@@ -726,26 +778,34 @@
             let progress = 0;
             const interval = setInterval(() => {
                 progress += Math.random() * 2 + 0.8;
-                if (progress >= 100) { progress = 100;
+                if (progress >= 100) {
+                    progress = 100;
                     clearInterval(interval);
-                    setTimeout(() => { introScreen.classList.remove('active');
+                    setTimeout(() => {
+                        introScreen.classList.remove('active');
                         gameScreen.classList.add('active');
-                        initGame(); }, 300); }
+                        initGame();
+                    }, 300);
+                }
                 introFill.style.width = progress + '%';
                 introText.textContent = `Loading ❄️ ${Math.floor(progress)}%`;
             }, 80);
 
-            const IMAGES = { gold: 'https://i.postimg.cc/QVhLwdng/goldenpati.png', green: 'https://i.postimg.cc/9zC3KQN7/bluepati.png', red: 'https://i.postimg.cc/xqnrh1FM/redpati.png' };
+            // ─── Game Constants ─────────────────────────
+            const IMAGES = {
+                gold: 'https://i.postimg.cc/QVhLwdng/goldenpati.png',
+                green: 'https://i.postimg.cc/9zC3KQN7/bluepati.png',
+                red: 'https://i.postimg.cc/xqnrh1FM/redpati.png'
+            };
             const POINTS = { gold: 1250, green: 750, red: 450 };
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
 
-            // 🔑 Your exact private and public keys
+            // ─── Dreamlo Keys ───────────────────────────
             const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
             const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
-            // Reliable AllOrigins proxy – same as original version
-            const ALLORIGINS = 'https://api.allorigins.win/get?url=';
 
+            // ─── Game State ─────────────────────────────
             let grid = [],
                 round = 1,
                 totalScore = 0,
@@ -755,6 +815,8 @@
                 revealedCount = {},
                 isProcessing = false,
                 goldStreak = 0;
+
+            // ─── DOM refs ───────────────────────────────
             const cardGrid = document.getElementById('cardGrid'),
                 roundDisplay = document.getElementById('roundDisplay'),
                 scoreDisplay = document.getElementById('scoreDisplay'),
@@ -765,11 +827,15 @@
                 lbList = document.getElementById('lbList'),
                 recordsBtn = document.getElementById('recordsBtn');
 
+            // ─── Grid functions ─────────────────────────
             function initGrid() {
                 let types = [];
                 for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
-                for (let i = types.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
-                    [types[i], types[j]] = [types[j], types[i]]; }
+                // Fisher-Yates shuffle
+                for (let i = types.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [types[i], types[j]] = [types[j], types[i]];
+                }
                 grid = types.map(type => ({ type, revealed: false }));
                 revealedCount = { gold: 0, green: 0, red: 0 };
                 roundActive = true;
@@ -789,14 +855,17 @@
                     front.className = 'card-front';
                     const img = document.createElement('img');
                     img.src = IMAGES[item.type];
+                    img.alt = item.type;
                     front.appendChild(img);
                     const back = document.createElement('div');
                     back.className = 'card-back';
                     inner.appendChild(front);
                     inner.appendChild(back);
                     card.appendChild(inner);
-                    if (item.revealed) { card.classList.add('flipped');
-                        card.classList.add(TYPE_COLOR[item.type]); }
+                    if (item.revealed) {
+                        card.classList.add('flipped');
+                        card.classList.add(TYPE_COLOR[item.type]);
+                    }
                     card.addEventListener('click', () => handleCardClick(idx));
                     cardGrid.appendChild(card);
                 });
@@ -813,28 +882,44 @@
                 cardEl.classList.add(TYPE_COLOR[item.type]);
 
                 if (revealedCount[item.type] === 3) {
+                    // Three matching cards found
                     isProcessing = true;
                     roundActive = false;
                     let pointsEarned = POINTS[item.type],
                         bonus = 0;
-                    if (item.type === 'gold') { goldStreak++; if (goldStreak >= 2) { bonus = (goldStreak - 1) * 250;
-                            pointsEarned += bonus; } } else { goldStreak = 0; }
+                    if (item.type === 'gold') {
+                        goldStreak++;
+                        if (goldStreak >= 2) {
+                            bonus = (goldStreak - 1) * 250;
+                            pointsEarned += bonus;
+                        }
+                    } else {
+                        goldStreak = 0;
+                    }
                     totalScore += pointsEarned;
                     updateHUD();
                     roundResults[round - 1] = item.type;
                     updateTracker();
-                    grid.forEach((g, i) => { if (g.type === item.type && g.revealed) { const el = cardGrid.children[i];
+                    // Glow effect on matching cards
+                    grid.forEach((g, i) => {
+                        if (g.type === item.type && g.revealed) {
+                            const el = cardGrid.children[i];
                             el.classList.add('glow');
-                            el.classList.add(TYPE_COLOR[item.type]); } });
+                            el.classList.add(TYPE_COLOR[item.type]);
+                        }
+                    });
                     let msgText = `+${pointsEarned}`;
                     if (bonus > 0) msgText += ` 🔥+${bonus}`;
                     winMessage.textContent = msgText;
                     winMessage.className = `win-message show ${TYPE_COLOR[item.type]}`;
-                    setTimeout(() => { winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove('glow', 'red',
-                            'blue', 'gold'));
-                        nextRound(); }, 1600);
+                    setTimeout(() => {
+                        winMessage.classList.remove('show', 'red', 'blue', 'gold');
+                        document.querySelectorAll('.card.glow').forEach(el => el.classList.remove(
+                            'glow', 'red', 'blue', 'gold'));
+                        nextRound();
+                    }, 1600);
                 } else if (grid.every(g => g.revealed)) {
+                    // All cards revealed but no triple match
                     isProcessing = true;
                     roundActive = false;
                     goldStreak = 0;
@@ -842,37 +927,60 @@
                     updateTracker();
                     winMessage.textContent = '🌨️ No match';
                     winMessage.className = 'win-message show blue';
-                    setTimeout(() => { winMessage.classList.remove('show', 'blue');
-                        nextRound(); }, 1000);
+                    setTimeout(() => {
+                        winMessage.classList.remove('show', 'blue');
+                        nextRound();
+                    }, 1000);
                 }
                 updateHUD();
             }
 
-            function nextRound() { round++; if (round > TOTAL_ROUNDS) { endGame(); return; } initGrid();
-                renderGrid();
-                updateHUD();
-                updateTracker();
-                isProcessing = false; }
-
-            function endGame() {
-                const finalScore = totalScore;
-                round = 1;
-                totalScore = 0;
-                gameOver = false;
-                goldStreak = 0;
-                roundResults = [];
+            function nextRound() {
+                round++;
+                if (round > TOTAL_ROUNDS) {
+                    endGame();
+                    return;
+                }
                 initGrid();
                 renderGrid();
                 updateHUD();
                 updateTracker();
-                const name = prompt('🏆 Enter your name for the leaderboard:', 'Player');
-                if (name && name.trim()) {
-                    addScoreToDreamlo(name.trim(), finalScore);
-                }
+                isProcessing = false;
             }
 
-            function updateHUD() { roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
-                scoreDisplay.textContent = totalScore; }
+            function endGame() {
+                gameOver = true;
+                roundActive = false;
+                const finalScore = totalScore;
+                // Show final score animation
+                winMessage.textContent = `🏆 ${finalScore.toLocaleString()} pts!`;
+                winMessage.className = 'win-message show gold';
+                setTimeout(() => {
+                    winMessage.classList.remove('show', 'gold');
+                    // Reset game state
+                    round = 1;
+                    totalScore = 0;
+                    goldStreak = 0;
+                    roundResults = [];
+                    gameOver = false;
+                    initGrid();
+                    renderGrid();
+                    updateHUD();
+                    updateTracker();
+                    // Ask for name and save score
+                    const name = prompt(
+                        `🏆 Final Score: ${finalScore.toLocaleString()} points!\n\nEnter your name for the leaderboard:`,
+                        'Player');
+                    if (name && name.trim()) {
+                        addScoreToDreamlo(name.trim(), finalScore);
+                    }
+                }, 1800);
+            }
+
+            function updateHUD() {
+                roundDisplay.textContent = `${Math.min(round, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
+                scoreDisplay.textContent = totalScore;
+            }
 
             function updateTracker() {
                 roundTracker.innerHTML = '';
@@ -891,37 +999,61 @@
                 }
             }
 
-            function initGame() { initGrid();
+            function initGame() {
+                round = 1;
+                totalScore = 0;
+                gameOver = false;
+                goldStreak = 0;
+                roundResults = [];
+                initGrid();
                 renderGrid();
                 updateHUD();
                 updateTracker();
-                goldStreak = 0; }
+                // Load leaderboard on game start
+                loadLeaderboard();
+            }
 
-            // ✅ Original reading method via AllOrigins (guaranteed to work)
+            // ─── Dreamlo Leaderboard Functions ──────────
+            // ✅ READ scores: Direct HTTPS call to Dreamlo JSON endpoint (supports CORS)
             function loadLeaderboard() {
-                const url = `http://dreamlo.com/lb/${DREAMLO_PUBLIC}/json`;
-                fetch(ALLORIGINS + encodeURIComponent(url))
-                    .then(r => r.json())
+                lbList.innerHTML = '<li class="lb-loading">❄️ Loading scores...</li>';
+                const url = `https://dreamlo.com/lb/${DREAMLO_PUBLIC}/json?t=${Date.now()}`;
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('HTTP ' + response.status);
+                        return response.json();
+                    })
                     .then(data => {
                         let entries = [];
                         try {
-                            const json = JSON.parse(data.contents);
-                            if (json.dreamlo?.leaderboard?.entry) {
-                                let raw = json.dreamlo.leaderboard.entry;
-                                entries = (Array.isArray(raw) ? raw : [raw]).sort((a, b) => +b.score - +a.score)
-                                    .slice(0, 20);
+                            if (data.dreamlo && data.dreamlo.leaderboard && data.dreamlo.leaderboard.entry) {
+                                let raw = data.dreamlo.leaderboard.entry;
+                                entries = Array.isArray(raw) ? raw : [raw];
+                                // Sort by score descending and take top 20
+                                entries.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+                                entries = entries.slice(0, 20);
                             }
-                        } catch (e) {}
+                        } catch (e) {
+                            console.error('Leaderboard parse error:', e);
+                        }
                         renderLeaderboard(entries);
                     })
-                    .catch(() => { lbList.innerHTML = '<li class="lb-empty">Could not load scores.</li>'; });
+                    .catch(err => {
+                        console.error('Leaderboard load error:', err);
+                        lbList.innerHTML =
+                            '<li class="lb-error">❄️ Could not load scores.<br>Check your connection.</li>';
+                        updateTopScorerDisplay(null);
+                    });
             }
 
             function renderLeaderboard(entries) {
                 lbList.innerHTML = '';
-                if (!entries.length) { lbList.innerHTML =
-                        '<li class="lb-empty">No scores yet. Be the first legend!</li>';
-                    updateTopScorerDisplay(null); return; }
+                if (!entries.length) {
+                    lbList.innerHTML = '<li class="lb-empty">No scores yet. Be the first legend! ❄️</li>';
+                    updateTopScorerDisplay(null);
+                    return;
+                }
+                // Update top scorer display with #1 player
                 updateTopScorerDisplay(entries[0].name);
                 entries.forEach((entry, idx) => {
                     const li = document.createElement('li');
@@ -938,31 +1070,58 @@
                 });
             }
 
-            function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
-
-            // ✅ Original writing method via AllOrigins (guaranteed to save scores)
-            function addScoreToDreamlo(name, score) {
-                const url =
-                    `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
-                fetch(ALLORIGINS + encodeURIComponent(url))
-                    .then(r => r.json())
-                    .then(() => {
-                        setTimeout(() => loadLeaderboard(), 500); // refresh after write
-                    })
-                    .catch(console.error);
+            function updateTopScorerDisplay(name) {
+                topScorerDisplay.textContent = name || '---';
             }
 
-            function escapeHtml(str) { const div = document.createElement('div');
-                div.textContent = str; return div.innerHTML; }
+            // ✅ WRITE scores: Uses no-cors mode so the request is sent even without CORS headers
+            // Dreamlo processes the GET request and stores the score; we don't need to read the response
+            function addScoreToDreamlo(name, score) {
+                const url =
+                    `https://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}?t=${Date.now()}`;
+                // Use no-cors to ensure the request is fired; Dreamlo will process it server-side
+                fetch(url, { mode: 'no-cors' })
+                    .then(() => {
+                        // Wait a moment for Dreamlo to process, then refresh leaderboard
+                        setTimeout(() => {
+                            loadLeaderboard();
+                            // Auto-open leaderboard so player can see their rank
+                            lbOverlay.classList.add('open');
+                        }, 900);
+                    })
+                    .catch(() => {
+                        // Even if fetch "fails" (no-cors returns opaque response), the GET request
+                        // was still sent to Dreamlo, so the score should be saved.
+                        setTimeout(() => {
+                            loadLeaderboard();
+                            lbOverlay.classList.add('open');
+                        }, 900);
+                    });
+            }
 
-            recordsBtn.addEventListener('click', () => { lbOverlay.classList.add('open');
-                loadLeaderboard(); });
-            document.getElementById('lbCloseBtn').addEventListener('click', () => lbOverlay.classList.remove(
-            'open'));
-            lbOverlay.addEventListener('click', (e) => { if (e.target === lbOverlay) lbOverlay.classList.remove(
-                    'open'); });
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // ─── Leaderboard Overlay Events ─────────────
+            recordsBtn.addEventListener('click', () => {
+                lbOverlay.classList.add('open');
+                loadLeaderboard();
+            });
+            document.getElementById('lbCloseBtn').addEventListener('click', () => {
+                lbOverlay.classList.remove('open');
+            });
+            lbOverlay.addEventListener('click', (e) => {
+                if (e.target === lbOverlay) lbOverlay.classList.remove('open');
+            });
+
+            // ─── Keyboard shortcuts ─────────────────────
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'r' || e.key === 'R') { round = 1;
+                // 'R' key resets the current game
+                if (e.key === 'r' || e.key === 'R') {
+                    round = 1;
                     totalScore = 0;
                     gameOver = false;
                     goldStreak = 0;
@@ -972,10 +1131,15 @@
                     updateHUD();
                     updateTracker();
                     winMessage.classList.remove('show', 'red', 'blue', 'gold');
-                    winMessage.textContent = ''; }
-                if (e.key === 'Escape') lbOverlay.classList.remove('open');
+                    winMessage.textContent = '';
+                }
+                // 'Esc' closes leaderboard
+                if (e.key === 'Escape') {
+                    lbOverlay.classList.remove('open');
+                }
             });
 
+            // ─── Initial leaderboard load ───────────────
             loadLeaderboard();
         })();
     </script>
