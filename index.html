@@ -801,7 +801,7 @@
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
 
-            // ─── Dreamlo Keys (EXACT from Wake Up to Play) ───
+            // ─── Dreamlo Keys ───────────────────────────
             const DREAMLO_KEY_WRITE = "YjalU2-3Yk6RIoRqxNh4JQ3Kq0lO0E_US39f8jV27Y-A";
             const DREAMLO_KEY_READ = "68a7a4f48f40bb12e0701b8c";
             const ALLORIGINS = "https://api.allorigins.win/get?url=";
@@ -1006,51 +1006,36 @@
                 updateLeaderboard();
             }
 
-            // ─── ✅ PROVEN Dreamlo Functions (AllOrigins + Local Cache) ───
+            // ─── 🌍 GLOBAL-ONLY Dreamlo Functions (No local storage) ───
             function addScoreToDreamlo(name, score) {
-                // 1. Save locally for instant display
-                const localEntry = { name, score: parseInt(score) };
-                let localScores = JSON.parse(localStorage.getItem('glacierLocalScores') || '[]');
-                localScores.push(localEntry);
-                localScores.sort((a, b) => b.score - a.score);
-                localScores = localScores.slice(0, 20);
-                localStorage.setItem('glacierLocalScores', JSON.stringify(localScores));
-
-                // 2. Show instantly from local
-                renderLeaderboardFromLocal();
+                // Show temporary message while saving
+                lbList.innerHTML = '<li class="lb-loading">❄️ Saving your score...</li>';
                 lbOverlay.classList.add('open');
 
-                // 3. Send to Dreamlo via AllOrigins (RELIABLE)
-                const url = `http://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}`;
-                fetch(ALLORIGINS + encodeURIComponent(url))
+                // Write to Dreamlo via AllOrigins proxy
+                const writeUrl = `http://dreamlo.com/lb/${DREAMLO_KEY_WRITE}/add/${encodeURIComponent(name)}/${score}`;
+                fetch(ALLORIGINS + encodeURIComponent(writeUrl))
                     .then(resp => resp.json())
                     .then(() => {
-                        // Refresh from remote after successful write
+                        // After successful write, fetch the global top 20
                         setTimeout(() => {
                             updateLeaderboard();
                         }, 800);
                     })
-                    .catch(err => console.error("Error adding score:", err));
-
-                // 4. Also refresh after a slightly longer delay in case the above fails
-                setTimeout(() => {
-                    updateLeaderboard();
-                }, 1500);
-            }
-
-            function renderLeaderboardFromLocal() {
-                const localScores = JSON.parse(localStorage.getItem('glacierLocalScores') || '[]');
-                let entries = localScores.map(e => ({ name: e.name, score: e.score }));
-                entries.sort((a, b) => b.score - a.score);
-                renderLeaderboard(entries);
-                if (entries.length > 0) updateTopScorerDisplay(entries[0].name);
+                    .catch(() => {
+                        // Still try to refresh after a delay
+                        setTimeout(() => {
+                            updateLeaderboard();
+                        }, 1500);
+                    });
             }
 
             function updateLeaderboard() {
-                lbList.innerHTML = '<li class="lb-loading">❄️ Syncing scores...</li>';
+                lbList.innerHTML = '<li class="lb-loading">❄️ Loading global scores...</li>';
 
-                const url = `http://dreamlo.com/lb/${DREAMLO_KEY_READ}/json`;
-                fetch(ALLORIGINS + encodeURIComponent(url))
+                // Read from Dreamlo with cache-busting timestamp
+                const readUrl = `http://dreamlo.com/lb/${DREAMLO_KEY_READ}/json?t=${Date.now()}`;
+                fetch(ALLORIGINS + encodeURIComponent(readUrl))
                     .then(resp => resp.json())
                     .then(data => {
                         let entries = [];
@@ -1066,32 +1051,18 @@
                         } catch (e) {
                             console.error("Dreamlo parse error:", e);
                         }
-
-                        // Merge with local scores
-                        const localScores = JSON.parse(localStorage.getItem('glacierLocalScores') || '[]');
-                        const combined = [...entries];
-                        localScores.forEach(local => {
-                            if (!combined.some(r => r.name === local.name && r.score === local.score)) {
-                                combined.push(local);
-                            }
-                        });
-                        combined.sort((a, b) => b.score - a.score);
-                        const finalTop20 = combined.slice(0, 20);
-
-                        // Update local cache
-                        localStorage.setItem('glacierLocalScores', JSON.stringify(finalTop20));
-
-                        renderLeaderboard(finalTop20);
+                        renderLeaderboard(entries);
                     })
                     .catch(() => {
-                        renderLeaderboardFromLocal();
+                        lbList.innerHTML = '<li class="lb-error">❄️ Could not load global scores.<br>Check your connection.</li>';
+                        updateTopScorerDisplay(null);
                     });
             }
 
             function renderLeaderboard(entries) {
                 lbList.innerHTML = '';
                 if (!entries.length) {
-                    lbList.innerHTML = '<li class="lb-empty">No scores yet. Be the first legend! ❄️</li>';
+                    lbList.innerHTML = '<li class="lb-empty">No global scores yet. Be the first legend! ❄️</li>';
                     updateTopScorerDisplay(null);
                     return;
                 }
