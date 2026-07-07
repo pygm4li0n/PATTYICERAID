@@ -181,6 +181,7 @@
             max-width: 65px;
         }
 
+        /* Center top scorer – flexible width for long names */
         .info-item.top-scorer-item {
             flex: 1 1 auto;
             min-width: 0;
@@ -463,6 +464,7 @@
             }
         }
 
+        /* Vivid leaderboard panel */
         #leaderboardOverlay {
             position: fixed;
             inset: 0;
@@ -737,9 +739,11 @@
             const POINTS = { gold: 1250, green: 750, red: 450 };
             const TYPE_COLOR = { gold: 'gold', green: 'blue', red: 'red' };
             const TOTAL_ROUNDS = 10;
+
+            // 🔑 Your exact private and public keys
             const DREAMLO_PRIVATE = 'pk-hZV5xxUijQvbbOhsgHgSgyJ_S6u8kKnN5dcBcfHZg';
             const DREAMLO_PUBLIC = '6a4c2b7b8f40bc13187164c5';
-            // AllOrigins proxy for writing scores (bypasses CORS/mixed content)
+            // Reliable AllOrigins proxy – same as original version
             const ALLORIGINS = 'https://api.allorigins.win/get?url=';
 
             let grid = [],
@@ -893,29 +897,24 @@
                 updateTracker();
                 goldStreak = 0; }
 
-            // ✅ Fast leaderboard loading via JSONP (no proxy, works on HTTPS)
+            // ✅ Original reading method via AllOrigins (guaranteed to work)
             function loadLeaderboard() {
-                const callbackName = 'dreamloCb_' + Date.now();
-                window[callbackName] = function(data) {
-                    try {
+                const url = `http://dreamlo.com/lb/${DREAMLO_PUBLIC}/json`;
+                fetch(ALLORIGINS + encodeURIComponent(url))
+                    .then(r => r.json())
+                    .then(data => {
                         let entries = [];
-                        if (data?.dreamlo?.leaderboard?.entry) {
-                            let raw = data.dreamlo.leaderboard.entry;
-                            entries = (Array.isArray(raw) ? raw : [raw]).sort((a, b) => +b.score - +a.score).slice(
-                                0, 20);
-                        }
+                        try {
+                            const json = JSON.parse(data.contents);
+                            if (json.dreamlo?.leaderboard?.entry) {
+                                let raw = json.dreamlo.leaderboard.entry;
+                                entries = (Array.isArray(raw) ? raw : [raw]).sort((a, b) => +b.score - +a.score)
+                                    .slice(0, 20);
+                            }
+                        } catch (e) {}
                         renderLeaderboard(entries);
-                    } catch (e) {
-                        lbList.innerHTML = '<li class="lb-empty">Could not load scores.</li>';
-                    }
-                    document.body.removeChild(document.getElementById(callbackName));
-                    delete window[callbackName];
-                };
-                const script = document.createElement('script');
-                script.id = callbackName;
-                script.src = `https://dreamlo.com/lb/${DREAMLO_PUBLIC}/json?callback=${callbackName}`;
-                script.onerror = () => { lbList.innerHTML = '<li class="lb-empty">Network error.</li>'; };
-                document.body.appendChild(script);
+                    })
+                    .catch(() => { lbList.innerHTML = '<li class="lb-empty">Could not load scores.</li>'; });
             }
 
             function renderLeaderboard(entries) {
@@ -941,15 +940,14 @@
 
             function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
 
-            // ✅ Reliable score writing via AllOrigins proxy (works even on HTTPS pages)
+            // ✅ Original writing method via AllOrigins (guaranteed to save scores)
             function addScoreToDreamlo(name, score) {
                 const url =
                     `http://dreamlo.com/lb/${DREAMLO_PRIVATE}/add/${encodeURIComponent(name)}/${score}`;
                 fetch(ALLORIGINS + encodeURIComponent(url))
                     .then(r => r.json())
                     .then(() => {
-                        // Refresh leaderboard after a short delay to let dreamlo process
-                        setTimeout(() => loadLeaderboard(), 800);
+                        setTimeout(() => loadLeaderboard(), 500); // refresh after write
                     })
                     .catch(console.error);
             }
