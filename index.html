@@ -806,7 +806,7 @@
                 initGrid(); renderGrid(); updateHUD(); updateTracker(); fetchLeaderboard();
             }
 
-            // ─── 📊 Google Sheets Leaderboard Functions (CORS‑proof) ───
+            // ─── 📊 Leaderboard Functions (fetch-based, no CORS issues) ───
             function addScoreToSheet(name, score) {
                 lbList.innerHTML = '<li class="lb-loading">❄️ Saving your score...</li>';
                 lbOverlay.classList.add('open');
@@ -815,7 +815,7 @@
                 const img = new Image();
                 img.src = `${SCRIPT_URL}?action=write&name=${encodeURIComponent(name)}&score=${score}&t=${Date.now()}`;
 
-                // After a short delay, refresh the leaderboard from the sheet
+                // Wait a moment for the server to process, then fetch updated leaderboard
                 setTimeout(() => {
                     fetchLeaderboard();
                 }, 1200);
@@ -823,27 +823,17 @@
 
             function fetchLeaderboard() {
                 lbList.innerHTML = '<li class="lb-loading">❄️ Loading global top 10...</li>';
-
-                // Use JSONP to bypass CORS
-                const callbackName = 'glacierCallback_' + Date.now();
-                window[callbackName] = function(entries) {
-                    renderLeaderboard(entries);
-                    delete window[callbackName];
-                    const scriptEl = document.getElementById('jsonpScript');
-                    if (scriptEl) scriptEl.remove();
-                };
-
-                const script = document.createElement('script');
-                script.id = 'jsonpScript';
-                script.src = `${SCRIPT_URL}?action=read&callback=${callbackName}&t=${Date.now()}`;
-                script.onerror = function() {
-                    lbList.innerHTML = '<li class="lb-error">❄️ Could not load scores.</li>';
-                    updateTopScorerDisplay(null);
-                    delete window[callbackName];
-                    const scriptEl = document.getElementById('jsonpScript');
-                    if (scriptEl) scriptEl.remove();
-                };
-                document.head.appendChild(script);
+                const url = `${SCRIPT_URL}?action=read&t=${Date.now()}`;
+                fetch(url)
+                    .then(r => r.json())
+                    .then(entries => {
+                        if (!Array.isArray(entries)) throw new Error('Invalid data');
+                        renderLeaderboard(entries);
+                    })
+                    .catch(() => {
+                        lbList.innerHTML = '<li class="lb-error">❄️ Could not load scores.</li>';
+                        updateTopScorerDisplay(null);
+                    });
             }
 
             function renderLeaderboard(entries) {
@@ -866,14 +856,9 @@
                 });
             }
 
-            function updateTopScorerDisplay(name) {
-                topScorerDisplay.textContent = name || '---';
-            }
-            function escapeHtml(str) {
-                const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
-            }
+            function updateTopScorerDisplay(name) { topScorerDisplay.textContent = name || '---'; }
+            function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
-            // ─── Overlay Events ─────────────────────────
             recordsBtn.addEventListener('click', () => { lbOverlay.classList.add('open'); fetchLeaderboard(); });
             document.getElementById('lbCloseBtn').addEventListener('click', () => lbOverlay.classList.remove('open'));
             lbOverlay.addEventListener('click', (e) => { if (e.target === lbOverlay) lbOverlay.classList.remove('open'); });
@@ -887,7 +872,6 @@
                 if (e.key === 'Escape') lbOverlay.classList.remove('open');
             });
 
-            // Auto-refresh leaderboard every 30 seconds
             setInterval(fetchLeaderboard, 30000);
             fetchLeaderboard();
         })();
