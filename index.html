@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🔮 CHONK RAIDS · Wizard Cat Edition</title>
+
+    <!-- ─── Preload both hero images so they arrive before the layout needs them ─── -->
+    <link rel="preload" as="image" href="https://i.postimg.cc/RCkvGRqY/Gato-mago-Chonk-Raid-(1).png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://i.postimg.cc/prJkhvT8/Gato-mago-Chonk-Raid-(2)-(2).png" fetchpriority="high">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@400;600;700;900&family=Cinzel:wght@400;600;700;900&display=swap');
 
@@ -30,7 +35,10 @@
             --parchment: #f5e6c8;
         }
 
+        html { height: 100%; }
+
         body {
+            height: 100dvh;
             min-height: 100vh;
             font-family: 'Cinzel', 'Segoe UI', serif;
             overflow: hidden;
@@ -59,7 +67,6 @@
             100% { opacity: 1;   transform: scale(1.05); }
         }
 
-        /* Rotating rune circle */
         .bg-arcane::after {
             content: '';
             position: absolute;
@@ -108,14 +115,28 @@
             max-width: 500px;
             padding: 20px;
         }
-        .intro-image {
+
+        /* Reserved slot — no layout shift when image arrives */
+        .intro-image-slot {
             width: 100%;
             max-width: 400px;
+            height: min(50dvh, 400px);
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-shrink: 0;
+        }
+        .intro-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             filter: drop-shadow(0 0 50px rgba(155, 89, 182, 0.5))
                     drop-shadow(0 0 90px rgba(212, 175, 55, 0.2));
-            margin-bottom: 30px;
             border-radius: 24px;
             animation: introFloat 5s ease-in-out infinite;
+            will-change: transform;
         }
         @keyframes introFloat {
             0%, 100% { transform: translateY(0); }
@@ -124,6 +145,7 @@
         .intro-loading-wrap {
             width: 80%;
             max-width: 350px;
+            flex-shrink: 0;
         }
         .intro-loading-track {
             width: 100%;
@@ -160,15 +182,31 @@
         .game-wrapper {
             width: 100%;
             max-width: 560px;
+            height: 100%;
+            max-height: 100dvh;
             padding: 8px 20px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 8px;
+            overflow: hidden;
         }
-                .game-logo {
+
+        /* Reserved slot for the game logo — fixed height, image can never push the layout */
+        .logo-slot {
+            width: min(100%, 500px);
+            height: clamp(80px, 18dvh, 170px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .game-logo {
             width: 100%;
-            max-width: 520px;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         .info-row {
@@ -181,6 +219,7 @@
             font-size: 0.9rem;
             color: var(--parchment);
             gap: 8px;
+            flex-shrink: 0;
         }
         .info-item {
             background: rgba(20, 8, 38, 0.9);
@@ -271,7 +310,11 @@
         }
 
         /* ─── Grid Frame ────────────────────────── */
+        /* Width is capped by BOTH the container AND the height budget at 4:3 — cannot overflow */
         .grid-frame {
+            width: min(100%, 520px, 68dvh);
+            aspect-ratio: 4 / 3;
+            max-height: 48dvh;
             background: rgba(26, 10, 46, 0.55);
             backdrop-filter: blur(20px);
             border-radius: 32px;
@@ -281,16 +324,17 @@
                 0 20px 70px rgba(0, 0, 0, 0.65),
                 inset 0 0 80px rgba(155, 89, 182, 0.06),
                 0 0 40px rgba(212, 175, 55, 0.05);
-            width: 100%;
-            max-width: 520px;
+            flex-shrink: 0;
             position: relative;
             overflow: hidden;
         }
         .card-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 12px;
             width: 100%;
+            height: 100%;
         }
 
         /* ─── Round Tracker ─────────────────────── */
@@ -298,15 +342,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
-            max-width: 520px;
-            margin: 12px auto 0 auto;
-            gap: 10px;
+            width: min(100%, 520px, 68dvh);
+            margin: 4px auto 0 auto;
+            gap: 8px;
             padding: 0 6px;
+            flex-shrink: 0;
         }
         .tracker-dot {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: rgba(155, 89, 182, 0.1);
             border: 2px solid rgba(155, 89, 182, 0.3);
@@ -350,10 +394,11 @@
 
         /* ─── Cards ─────────────────────────────── */
         .card {
-            aspect-ratio: 1 / 1;
             perspective: 800px;
             cursor: pointer;
             position: relative;
+            min-width: 0;
+            min-height: 0;
         }
         .card-inner {
             position: relative;
@@ -389,7 +434,7 @@
         }
         .card-back::after {
             content: '🔮';
-            font-size: 2.8rem;
+            font-size: clamp(1.4rem, 3.2dvh, 2.8rem);
             filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.9))
                     drop-shadow(0 0 40px rgba(155, 89, 182, 0.6))
                     drop-shadow(0 1px 3px rgba(0, 0, 0, 0.75))
@@ -409,12 +454,11 @@
             backdrop-filter: blur(12px);
             transform: rotateY(180deg);
             border: 2px solid rgba(212, 175, 55, 0.35);
-            padding: 10px;
+            padding: 8%;
             transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
             box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.85);
         }
 
-        /* Card type auras */
         .card.crimson .card-front {
             border-color: var(--crimson);
             box-shadow: 0 0 22px rgba(231, 76, 60, 0.55), inset 0 0 22px rgba(231, 76, 60, 0.2);
@@ -438,7 +482,6 @@
             filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.95)) drop-shadow(0 0 28px rgba(255, 215, 0, 0.55));
         }
 
-        /* Glow on match */
         .card.glow.crimson .card-front {
             border-color: var(--crimson);
             box-shadow: 0 0 55px rgba(231, 76, 60, 0.85), inset 0 0 45px rgba(231, 76, 60, 0.45);
@@ -462,8 +505,8 @@
         }
 
         .card-front img {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 84%;
+            max-height: 84%;
             object-fit: contain;
         }
 
@@ -521,7 +564,7 @@
             padding: 28px 28px 30px;
             max-width: 440px;
             width: 100%;
-            max-height: 72vh;
+            max-height: 72dvh;
             overflow-y: auto;
             box-shadow:
                 0 0 60px rgba(155, 89, 182, 0.2),
@@ -680,7 +723,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
             text-shadow: 0 2px 3px rgba(0, 0, 0, 0.9);
-            margin-top: 10px;
+            margin-top: 4px;
+            flex-shrink: 0;
         }
         .btn-records:hover {
             color: #ffd700;
@@ -690,15 +734,60 @@
         }
         .btn-records:active { transform: scale(0.95); }
 
+        /* ─── Responsive Fit ────────────────────── */
         @media (max-width: 600px) {
-            .info-item.top-scorer-item .value { max-width: 100px; font-size: 0.9em; }
+            .game-wrapper { padding: 6px 12px 8px; gap: 6px; }
+            .logo-slot { height: clamp(70px, 16dvh, 130px); width: min(100%, 420px); }
+            .grid-frame {
+                width: min(100%, 420px, 68dvh);
+                padding: 12px;
+                border-radius: 26px;
+                max-height: 48dvh;
+            }
+            .card-grid { gap: 8px; }
+            .info-item { padding: 5px 12px; gap: 4px; }
+            .info-item .emoji-big { font-size: 1.2rem; }
             .info-item.top-scorer-item .emoji-big { font-size: 1.2rem; }
-            .lb-panel { padding: 18px 14px; }
+            .info-item .value { font-size: 1.1em; }
+            .info-item.top-scorer-item .value { max-width: 100px; font-size: 1.05em; }
+            .tracker-dot { width: 16px; height: 16px; }
+            .round-tracker { gap: 5px; }
+            .btn-records { padding: 8px 22px; font-size: 0.85rem; letter-spacing: 2px; }
+            .lb-panel { padding: 20px 16px; }
             .win-message { font-size: 2.2rem; }
         }
         @media (max-width: 400px) {
-            .info-item.top-scorer-item .value { max-width: 70px; font-size: 0.8em; }
+            .info-item.round-item .value,
+            .info-item.score-item .value { max-width: 60px; }
+            .info-item.top-scorer-item .value { max-width: 70px; font-size: 0.95em; }
             .win-message { font-size: 1.8rem; }
+        }
+        @media (max-height: 700px) {
+            .game-wrapper { gap: 5px; padding: 4px 16px 8px; }
+            .logo-slot { height: clamp(60px, 14dvh, 120px); }
+            .grid-frame {
+                width: min(100%, 520px, 78dvh);
+                max-height: 56dvh;
+                padding: 12px;
+            }
+            .card-grid { gap: 8px; }
+            .btn-records { padding: 8px 22px; font-size: 0.85rem; }
+        }
+        @media (max-height: 560px) {
+            .game-wrapper { gap: 4px; }
+            .logo-slot { height: clamp(50px, 13dvh, 100px); }
+            .grid-frame {
+                width: min(100%, 520px, 90dvh);
+                max-height: 60dvh;
+                padding: 10px;
+            }
+            .card-grid { gap: 6px; }
+            .info-item { padding: 4px 10px; font-size: 0.75rem; }
+            .info-item .emoji-big { font-size: 1rem; }
+            .info-item .value { font-size: 1em; }
+            .tracker-dot { width: 14px; height: 14px; border-width: 1.5px; }
+            .btn-records { padding: 6px 18px; font-size: 0.75rem; }
+            .round-tracker { margin-top: 2px; }
         }
     </style>
 </head>
@@ -708,9 +797,13 @@
 
     <div id="introScreen" class="screen active">
         <div class="intro-container">
-            <img class="intro-image"
-                 src="https://i.postimg.cc/RCkvGRqY/Gato-mago-Chonk-Raid-(1).png"
-                 alt="Chonk Raids — Wizard Cat">
+            <div class="intro-image-slot">
+                <img class="intro-image"
+                     src="https://i.postimg.cc/RCkvGRqY/Gato-mago-Chonk-Raid-(1).png"
+                     alt="Chonk Raids — Wizard Cat"
+                     width="400" height="400"
+                     loading="eager" decoding="async" fetchpriority="high">
+            </div>
             <div class="intro-loading-wrap">
                 <div class="intro-loading-track"><div class="intro-loading-fill" id="introLoadingFill"></div></div>
                 <div class="intro-loading-text" id="introLoadingText">Summoning 🪄 0%</div>
@@ -720,9 +813,13 @@
 
     <div id="gameScreen" class="screen">
         <div class="game-wrapper">
-            <img class="game-logo"
-                 src="https://i.postimg.cc/prJkhvT8/Gato-mago-Chonk-Raid-(2)-(2).png"
-                 alt="Chonk Raids">
+            <div class="logo-slot">
+                <img class="game-logo"
+                     src="https://i.postimg.cc/prJkhvT8/Gato-mago-Chonk-Raid-(2)-(2).png"
+                     alt="Chonk Raids"
+                     width="500" height="170"
+                     loading="eager" decoding="async" fetchpriority="high">
+            </div>
             <div class="info-row">
                 <div class="info-item round-item"><span class="emoji-big">🪄</span><span class="value" id="roundDisplay">1 / 10</span></div>
                 <div class="info-item top-scorer-item"><span class="emoji-big">👑</span><span class="value" id="topScorerDisplay">---</span></div>
@@ -881,6 +978,8 @@
                     front.className = 'card-front';
                     const img = document.createElement('img');
                     img.src = IMAGES[item.type];
+                    img.loading = 'eager';
+                    img.decoding = 'async';
                     front.appendChild(img);
 
                     const back = document.createElement('div');
