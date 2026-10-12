@@ -709,6 +709,161 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
         }
 
+        /* ─── Score Entry Modal ─────────────────── */
+        #scoreEntryOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 2, 12, 0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #scoreEntryOverlay.open { display: flex; }
+
+        .se-panel {
+            background: linear-gradient(170deg, rgba(26, 10, 46, 0.98), rgba(10, 5, 16, 0.99), rgba(20, 8, 40, 0.97));
+            border: 2px solid rgba(212, 175, 55, 0.35);
+            border-radius: 34px;
+            padding: 30px 26px 26px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow:
+                0 0 60px rgba(155, 89, 182, 0.25),
+                0 0 130px rgba(212, 175, 55, 0.12),
+                0 30px 80px rgba(0, 0, 0, 0.75),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            position: relative;
+            text-align: center;
+            animation: seIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes seIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        .se-panel h2 {
+            font-family: 'Grenze Gotisch', serif;
+            font-weight: 900;
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #f5e6c8, #d4af37, #ffd700, #f5e6c8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 18px rgba(212, 175, 55, 0.6));
+        }
+
+        .se-score-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: rgba(212, 175, 55, 0.65);
+            margin-top: 18px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+        }
+
+        .se-score-value {
+            font-family: 'Grenze Gotisch', serif;
+            font-weight: 900;
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #ffffff, #ffe87c, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.5))
+                    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95));
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 22px;
+        }
+
+        .se-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(10, 5, 16, 0.85);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 18px;
+            color: #ffe87c;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .se-input::placeholder {
+            color: rgba(212, 175, 55, 0.35);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .se-input:focus {
+            border-color: rgba(255, 215, 0, 0.9);
+            box-shadow: 0 0 28px rgba(255, 215, 0, 0.4),
+                        inset 0 0 20px rgba(0, 0, 0, 0.6);
+            background: rgba(20, 8, 38, 0.95);
+            color: #ffffff;
+        }
+
+        .se-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .se-btn {
+            padding: 13px 24px;
+            border-radius: 22px;
+            font-family: 'Grenze Gotisch', serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.9);
+            border: 1.5px solid;
+            white-space: nowrap;
+        }
+
+        .se-btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.35), rgba(255, 215, 0, 0.18));
+            border-color: rgba(255, 215, 0, 0.7);
+            color: #fff5dc;
+        }
+        .se-btn-primary:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.55), rgba(255, 215, 0, 0.35));
+            box-shadow: 0 0 32px rgba(255, 215, 0, 0.45);
+            color: #ffd700;
+            transform: translateY(-1px);
+        }
+
+        .se-btn-secondary {
+            flex: 0 0 auto;
+            background: linear-gradient(135deg, rgba(74, 44, 109, 0.5), rgba(26, 10, 46, 0.5));
+            border-color: rgba(155, 89, 182, 0.45);
+            color: rgba(245, 230, 200, 0.75);
+        }
+        .se-btn-secondary:hover {
+            color: #ffffff;
+            border-color: rgba(155, 89, 182, 0.8);
+            background: linear-gradient(135deg, rgba(74, 44, 109, 0.7), rgba(26, 10, 46, 0.7));
+        }
+
+        .se-btn:active { transform: scale(0.96); }
+
         /* ─── Records Button ────────────────────── */
         .btn-records {
             font-family: 'Grenze Gotisch', serif;
@@ -758,12 +913,22 @@
             .btn-records { padding: 8px 22px; font-size: 0.85rem; letter-spacing: 2px; }
             .lb-panel { padding: 20px 16px; }
             .win-message { font-size: 2.2rem; }
+
+            .se-panel { padding: 24px 20px 22px; border-radius: 28px; }
+            .se-panel h2 { font-size: 1.5rem; letter-spacing: 2px; }
+            .se-score-value { font-size: 2.6rem; }
+            .se-input { font-size: 1rem; padding: 12px 16px; }
+            .se-btn { font-size: 0.8rem; padding: 11px 18px; letter-spacing: 1.5px; }
         }
         @media (max-width: 400px) {
             .info-item.round-item .value,
             .info-item.score-item .value { max-width: 60px; }
             .info-item.top-scorer-item .value { max-width: 70px; font-size: 0.95em; }
             .win-message { font-size: 1.8rem; }
+            .se-panel h2 { font-size: 1.3rem; }
+            .se-score-value { font-size: 2.2rem; }
+            .se-actions { flex-direction: column-reverse; }
+            .se-btn-secondary { flex: 1; padding: 10px 18px; }
         }
         @media (max-height: 700px) {
             .game-wrapper { gap: 5px; padding: 4px 16px 8px; }
@@ -842,6 +1007,25 @@
             <button class="close-btn" id="lbCloseBtn">✕</button>
             <h2>🏆 ARCANE LEGENDS</h2>
             <ul class="lb-list" id="lbList"><li class="lb-loading">🔮 Consulting the oracle...</li></ul>
+        </div>
+    </div>
+
+    <div id="scoreEntryOverlay">
+        <div class="se-panel">
+            <h2>📜 INSCRIBE YOUR LEGEND</h2>
+            <div class="se-score-label">FINAL SCORE</div>
+            <div class="se-score-value" id="seScoreValue">0</div>
+            <input type="text"
+                   class="se-input"
+                   id="seNameInput"
+                   maxlength="20"
+                   placeholder="Your wizard name..."
+                   autocomplete="off"
+                   spellcheck="false">
+            <div class="se-actions">
+                <button class="se-btn se-btn-secondary" id="seSkipBtn">SKIP</button>
+                <button class="se-btn se-btn-primary" id="seSubmitBtn">🪄 INSCRIBE</button>
+            </div>
         </div>
     </div>
 
@@ -938,8 +1122,8 @@
 
             // ─── 🌐 Supabase Leaderboard ─────────────────
             // Fill these two from: Supabase → Project Settings → API
-            const SUPABASE_URL  = 'https://YOUR-PROJECT.supabase.co';
-            const SUPABASE_ANON = 'eyJhbGciOi...YOUR-ANON-KEY...';
+            const SUPABASE_URL  = 'https://mrytnleesuitkdxltcnp.supabase.co';
+            const SUPABASE_ANON = 'sb_publishable_KV5Sy6lFN8oCjYOtePVtDQ_CCZXIkxg';
 
             async function sbFetch(path, options = {}) {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -968,8 +1152,51 @@
                 winMessage = document.getElementById('winMessage'),
                 lbOverlay = document.getElementById('leaderboardOverlay'),
                 lbList = document.getElementById('lbList'),
-                recordsBtn = document.getElementById('recordsBtn');
+                recordsBtn = document.getElementById('recordsBtn'),
+                seOverlay = document.getElementById('scoreEntryOverlay'),
+                seScoreValue = document.getElementById('seScoreValue'),
+                seNameInput = document.getElementById('seNameInput'),
+                seSubmitBtn = document.getElementById('seSubmitBtn'),
+                seSkipBtn = document.getElementById('seSkipBtn');
 
+            // ─── Score Entry Modal ──────────────────────
+            let pendingScore = 0;
+            let entryOpen = false;
+
+            function showScoreEntry(score) {
+                pendingScore = score;
+                seScoreValue.textContent = score.toLocaleString();
+                seNameInput.value = localStorage.getItem('chonk_wizard_name') || '';
+                seOverlay.classList.add('open');
+                entryOpen = true;
+                // Small delay so the input focus registers after the modal animates in
+                setTimeout(() => seNameInput.focus(), 120);
+            }
+
+            function hideScoreEntry() {
+                seOverlay.classList.remove('open');
+                entryOpen = false;
+            }
+
+            async function submitScoreEntry() {
+                const raw = (seNameInput.value || '').trim();
+                const name = (raw || 'Player').slice(0, 20);
+                localStorage.setItem('chonk_wizard_name', name);
+                const scoreToSend = pendingScore;
+                hideScoreEntry();
+                await addScoreToSheet(name, scoreToSend);
+            }
+
+            seSubmitBtn.addEventListener('click', submitScoreEntry);
+            seSkipBtn.addEventListener('click', hideScoreEntry);
+            seNameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitScoreEntry();
+                }
+            });
+
+            // ─── Grid Logic ─────────────────────────────
             function initGrid() {
                 let types = [];
                 for (let i = 0; i < 4; i++) types.push('gold', 'green', 'red');
@@ -1020,7 +1247,7 @@
             }
 
             function handleCardClick(index) {
-                if (gameOver || !roundActive || isProcessing) return;
+                if (gameOver || !roundActive || isProcessing || entryOpen) return;
                 const item = grid[index];
                 if (item.revealed) return;
 
@@ -1119,13 +1346,7 @@
                     updateHUD();
                     updateTracker();
 
-                    const name = prompt(
-                        `🏆 Final Score: ${finalScore.toLocaleString()} points!\n\nEnter your wizard name for the leaderboard:`,
-                        'Player'
-                    );
-                    if (name && name.trim()) {
-                        addScoreToSheet(name.trim(), finalScore);
-                    }
+                    showScoreEntry(finalScore);
                 }, 1800);
             }
 
@@ -1227,6 +1448,7 @@
             }
 
             recordsBtn.addEventListener('click', () => {
+                if (entryOpen) return;
                 lbOverlay.classList.add('open');
                 fetchLeaderboard();
             });
@@ -1237,6 +1459,7 @@
             });
 
             document.addEventListener('keydown', (e) => {
+                if (entryOpen) return;   // don't hijack keys while the modal is up
                 if (e.key === 'r' || e.key === 'R') {
                     round = 1;
                     totalScore = 0;
